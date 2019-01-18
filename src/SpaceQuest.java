@@ -2,14 +2,18 @@
 //
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+
 import com.studiohartman.jamepad.ControllerManager;
 import com.studiohartman.jamepad.ControllerState;
 
 public class SpaceQuest {
 	private int[] xRes = {1920, 1280, 1024};
 	private int[] yRes = {1080, 720, 576};
+	private Room[][] map;
 	private static int res = 1;
 	private static ControllerManager controllers;
+	private String curdir = System.getProperty("user.dir");
 	private JFrame frame;
 
 	/**
@@ -61,7 +65,8 @@ public class SpaceQuest {
 		controllers.initSDLGamepad();
 		
 		frame = new JFrame();
-		frame.setBounds(100, 100, xRes[res] + 15, yRes[res] + 39);
+		frame.setResizable(false);
+		frame.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -69,6 +74,33 @@ public class SpaceQuest {
 		panel.setBounds(0, 0, xRes[res], yRes[res]);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
+		
+		String splitBy = " ";	//information segmented by spaces
+		
+        File cd =  new File(curdir + "\\assets");
+        File[] assets = cd.listFiles();
+        
+        for (File f: assets) {
+        	
+            if (f.getName().equals("levels.INFO")) {
+            	
+            	try (FileInputStream is = new FileInputStream(f)) {
+            		
+                    InputStreamReader ir = new InputStreamReader(is);
+                    BufferedReader rdr = new BufferedReader(ir);
+                    String line = rdr.readLine();
+                    
+                    while (line != null) {
+                    	String[] lineData = line.split(splitBy);
+                    	
+                        line = rdr.readLine();
+                        
+                    }
+                }
+                catch (Exception ex) { System.out.printf("Failed for %s\n", f.getName()); }
+            }
+        }
+        
 
 	}
 
