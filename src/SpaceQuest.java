@@ -48,7 +48,7 @@ public class SpaceQuest {
 				System.out.println("\"X\" on \"" + currState.controllerType + "\" is pressed");
 			  }
 			}
-		System.out.println("\"B\" was pressed");
+		System.out.println("Exited button test.");
 		
 		controllers.quitSDLGamepad();
 	}
