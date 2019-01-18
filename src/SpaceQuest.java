@@ -1,5 +1,5 @@
 // this class implements Jamepad, an open-source Java gamepad library. it can be found at "https://github.com/williamahartman/Jamepad"
-
+//
 import javax.swing.*;
 import java.awt.*;
 import com.studiohartman.jamepad.ControllerManager;
@@ -69,7 +69,6 @@ public class SpaceQuest {
 		panel.setBounds(0, 0, xRes[res], yRes[res]);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-		
 
 	}
 
