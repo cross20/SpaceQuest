@@ -22,20 +22,22 @@ import java.util.concurrent.*;
  */
 public class SpaceQuest {
 	// Resolution options.
-	private int[] xRes = {1920, 1280, 1024};
-	private int[] yRes = {1080, 720, 576};
+	private static int[] xRes = {1920, 1280, 1024};
+	private static int[] yRes = {1080, 720, 576};
 	private static int res = 1;
+	
+	// GUI elements.
+	private static JFrame frame;
+	private static JPanel panel;
+	private static JLabel character;
 	
 	// File I/O.
 	private String curdir = System.getProperty("user.dir");
 	private String OS = System.getProperty("os.name");
 	
-	// Static members.
+	// Controller.
 	private static ControllerManager controllers;
 	private static double minMagnitude = 0.2;
-	private static JFrame frame;
-	private static JPanel panel;
-	private static JLabel character;
 	
 	// Game components.
 	private Room[][] map;
@@ -44,7 +46,9 @@ public class SpaceQuest {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		run();
+		// TODO: Figure out how to make the mainMenu() method work.
+		runGame();
+		//mainMenu();
 	}
 
 	/**
@@ -57,7 +61,9 @@ public class SpaceQuest {
 	/**
 	 * Run the game
 	 */
-	public static void run() {
+	public static void runGame() {
+		// TODO: Initialize the game map.
+		
 		// Create threads to check/run multiple game components at the same time.
 		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(5);
 		
@@ -87,6 +93,8 @@ public class SpaceQuest {
 					int changeX = (int)Math.round((Math.cos(currAngle)*10)/2);
 					int changeY = (int)Math.round((Math.sin(currAngle)*10)/2);
 					
+					// TODO: Add a check to make sure that the character doesn't leave the map.
+					
 					// Update the JLabel which represents the character. Since
 					// the positive X direction moves from left to right, add
 					// changeX to the character's current location. Since the
@@ -109,7 +117,6 @@ public class SpaceQuest {
 			
 			// Check for exit conditions.
 			if(!currState.isConnected || currState.b) {
-			    character.setText("Game over");
 				break;
 			}
 		}
@@ -119,6 +126,36 @@ public class SpaceQuest {
 		// Process to exit the game.
 		scheduledPool.shutdown();
 		controllers.quitSDLGamepad();
+	}
+	
+	public static void mainMenu() {
+		JFrame testFrame = new JFrame();
+		testFrame.setResizable(false);
+		testFrame.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
+		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		testFrame.getContentPane().setLayout(null);
+		
+		JPanel menuPanel = new JPanel();
+		menuPanel.setBounds(0, 0, xRes[res], yRes[res]);
+		menuPanel.setLayout(null);
+		
+		JLabel test = new JLabel("Test");
+		test.setBounds(new Rectangle(20, 20, 128, 128));
+		
+		menuPanel.add(test);
+		testFrame.getContentPane().add(menuPanel);
+		testFrame.setVisible(true);
+		
+		while(true) {
+			ControllerState currState = controllers.getState(0);
+			
+			if(currState.a) {
+				runGame();
+			}
+			if(currState.b || !currState.isConnected) {
+				break;
+			}
+		}
 	}
 	
 	/**
@@ -141,8 +178,10 @@ public class SpaceQuest {
 		panel.setLayout(null);
 		
 		// Create the player
-		character = new JLabel("Josh Miller");
-		character.setBounds(new Rectangle(20, 20, 100, 30));
+		character = new JLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
+		character.setBounds(new Rectangle(20, 20, 128, 128));
+		
+		// TODO: Initialize the game menu.
 		
 		// Add all GUI components to the JFrame
 		panel.add(character);
