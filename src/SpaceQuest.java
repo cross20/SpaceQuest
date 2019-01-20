@@ -12,15 +12,14 @@ public class SpaceQuest {
 	private int[] xRes = {1920, 1280, 1024};
 	private int[] yRes = {1080, 720, 576};
 	private static int res = 1;
-	private static double minMagnitude = 0.15;
+	private static double minMagnitude = 0.2;
 	private Room[][] map;
 	private static ControllerManager controllers;
 	private String curdir = System.getProperty("user.dir");
 	private String OS = System.getProperty("os.name");
-	private JFrame frame;
-	JPanel panel;
-	private ArrayList<JLabel> labels = new ArrayList<>();
-	JLabel character = new JLabel("Josh Miller");
+	private static JFrame frame;
+	private static JPanel panel;
+	private static JLabel character;
 
 	/**
 	 * Launch the application.
@@ -69,20 +68,8 @@ public class SpaceQuest {
 				  // TEST
 				  System.out.println("\"Right Stick\" pushed " + currState.rightStickAngle + " degrees.");
 				  System.out.println("\"Right Stick\" magnitude " + currState.rightStickMagnitude + ".");
-				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.13. Recommended 0.15 for best results.
-				  
-				  // TEST
-				  try {
-					  JLabel character = new JLabel("Josh Millerrrrr");
-					  character.setBounds(new Rectangle(10, 10, 100, 100));
-					  character.setVisible(true);
-					  window.panel.add(character);
-					  window.frame.getContentPane().add(window.panel);
-					  window.frame.setVisible(true);
-				  } catch(Exception e) { System.out.println("Exception found at character creation. Exception: " + e.toString()); }
-				  // Failed. JLabel does not appear in window.
+				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.16. Recommended 0.2 for best results.
 			  }
-				  
 			  if(currState.leftStickMagnitude >= minMagnitude) {
 				  // TEST
 				  System.out.println("\"Left\" stick pushed " + currState.leftStickAngle + " degrees.");
@@ -90,9 +77,15 @@ public class SpaceQuest {
 				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.13. Recommended 0.15 for best results.
 				  Double xVelocity = currState.rightStickMagnitude * Math.cos(Math.toRadians(currState.rightStickAngle));
 				  Double yVelocity = currState.rightStickMagnitude * Math.sin(Math.toRadians(currState.rightStickAngle));
+				  
+				  // TEST
+				  character.setLocation(character.getLocation().x + 1, character.getLocation().y + 1);
+				  // Passed. This will allow the character to move locations.
+				  
+				  // TODO: Figure out how to make the character move at a slower rate.
 			  }
 			}
-		System.out.println("Exited test.");
+		System.out.println("Exited game loop.");
 		
 		controllers.quitSDLGamepad();
 	}
@@ -104,17 +97,25 @@ public class SpaceQuest {
 		controllers = new ControllerManager();
 		controllers.initSDLGamepad();
 		
+		// Create the JFrame
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		// Create the JPanel
 		panel = new JPanel();
 		panel.setBounds(0, 0, xRes[res], yRes[res]);
-		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		// Create the player
+		character = new JLabel("Josh Miller");
+		character.setBounds(new Rectangle(20, 20, 100, 30));
+		
+		// Ass all GUI components to the JFrame
+		panel.add(character);
+		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 		
 		String splitBy = " ";	//information segmented by spaces
