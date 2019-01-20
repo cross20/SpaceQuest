@@ -1,4 +1,6 @@
-// this class implements Jamepad, an open-source Java gamepad library. it can be found at "https://github.com/williamahartman/Jamepad"
+// SOURCES:
+// Jamepad -- "https://github.com/williamahartman/Jamepad"
+// ScheduleThreadPoolExecuter -- https://examples.javacodegeeks.com/core-java/util/concurrent/scheduledthreadpoolexecutor/java-util-concurrent-scheduledthreadpoolexecutor-example/
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +9,17 @@ import java.io.*;
 import com.studiohartman.jamepad.*;
 import java.lang.Math;
 import java.util.*;
+import java.util.concurrent.*;
 
+/**
+ * This class runs the entire game of SpaceQuest. To do this, it performs two main tasks.
+ * The first task is to initialize the graphics of the game. After doing this, the second 
+ * task is to run the game loop until the game exit conditions are met.
+ * 
+ * @since 20 January 2019
+ * @version 1.0
+ * @author Kyle Shepard, Chad Ross
+ */
 public class SpaceQuest {
 	private int[] xRes = {1920, 1280, 1024};
 	private int[] yRes = {1080, 720, 576};
@@ -36,57 +48,69 @@ public class SpaceQuest {
 	}
 	
 	/**
-	 * run the game
+	 * Run the game
 	 */
 	public static void run() {
-		SpaceQuest window = null;
+		// Create threads to check/run multiple game components at the same time.
+		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(5);
 		
 		try {
-			window = new SpaceQuest();
+			SpaceQuest window = new SpaceQuest();
 			window.frame.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
 		
-		// Gameloop.
-		while(true) {
-			ControllerState currState = controllers.getState(0);
-
-			  if(!currState.isConnected || currState.b) {
-			    break;
-			    // Passed
-			  }
-			  if(currState.a) {
-				  // TEST
-				  System.out.println("\"A\" on \"" + currState.controllerType + "\" is pressed");
-				  // Passed
-			  }
-			  if(currState.x) {
-				  // TEST
-				  System.out.println("\"X\" on \"" + currState.controllerType + "\" is pressed");
-				  // Passed
-			  }
-			  if(currState.rightStickMagnitude >= minMagnitude) {
-				  // TEST
-				  System.out.println("\"Right Stick\" pushed " + currState.rightStickAngle + " degrees.");
-				  System.out.println("\"Right Stick\" magnitude " + currState.rightStickMagnitude + ".");
-				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.16. Recommended 0.2 for best results.
-			  }
-			  if(currState.leftStickMagnitude >= minMagnitude) {
-				  // TEST
-				  System.out.println("\"Left\" stick pushed " + currState.leftStickAngle + " degrees.");
-				  System.out.println("\"Left Stick\" magnitude " + currState.leftStickMagnitude + ".");
-				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.13. Recommended 0.15 for best results.
-				  Double xVelocity = currState.rightStickMagnitude * Math.cos(Math.toRadians(currState.rightStickAngle));
-				  Double yVelocity = currState.rightStickMagnitude * Math.sin(Math.toRadians(currState.rightStickAngle));
-				  
-				  // TEST
-				  character.setLocation(character.getLocation().x + 1, character.getLocation().y + 1);
-				  // Passed. This will allow the character to move locations.
-				  
-				  // TODO: Figure out how to make the character move at a slower rate.
-			  }
+		// movePlayer checks to see if the the leftStick is active
+		// and determines where to move the player if it is.
+		Runnable movePlayer = new Runnable() {
+			@Override
+			public void run() {
+				// Check to current state of the controller.
+				ControllerState currState = controllers.getState(0);
+				
+				if(currState.leftStickMagnitude >= minMagnitude) {
+					// Determine what direction to send the player.
+					// For reference, 0 is right, PI/2 is upward,
+					// PI is left, and -PI/2 is downward.
+					double currAngle = Math.toRadians(currState.leftStickAngle);
+					
+					// The formula below determines what percentage out
+					// of 5 pixels the player should move in the X and Y
+					// directions. The result is approximated since it
+					// must be type int.
+					int changeX = (int)Math.round((Math.cos(currAngle)*10)/2);
+					int changeY = (int)Math.round((Math.sin(currAngle)*10)/2);
+					
+					// Update the JLabel which represents the character. Since
+					// the positive X direction moves from left to right, add
+					// changeX to the character's current location. Since the
+					// positive Y direction moves from top to bottom, subtract
+					// changY from the character's current location (to avoid
+					// the Y direction being inverted).
+					character.setLocation(character.getLocation().x + changeX, character.getLocation().y - changeY );
+				}
 			}
-		System.out.println("Exited game loop.");
+		};
 		
+		// Schedule movePlayer to check for controller updates every 10 milisecions.
+		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, 10, TimeUnit.MILLISECONDS);
+		
+		// This loop will check to see if the game exit conditions are satisfied.
+		// If they are, then stop all threads and execute the game exit process.
+		while(true) {
+			// Check the current state of the controller.
+			ControllerState currState = controllers.getState(0);
+			
+			// Check for exit conditions.
+			if(!currState.isConnected || currState.b) {
+			    character.setText("Game over");
+				break;
+			}
+		}
+		
+		System.out.println("Game exit initialized.");
+		
+		// Process to exit the game.
+		scheduledPool.shutdown();
 		controllers.quitSDLGamepad();
 	}
 	
@@ -113,12 +137,12 @@ public class SpaceQuest {
 		character = new JLabel("Josh Miller");
 		character.setBounds(new Rectangle(20, 20, 100, 30));
 		
-		// Ass all GUI components to the JFrame
+		// Add all GUI components to the JFrame
 		panel.add(character);
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 		
-		String splitBy = " ";	//information segmented by spaces
+		String splitBy = " "; //information segmented by spaces
 		
 		File f;
 		
