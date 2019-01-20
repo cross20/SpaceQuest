@@ -40,13 +40,14 @@ public class SpaceQuest {
 	 * run the game
 	 */
 	public static void run() {
+		SpaceQuest window = null;
+		
 		try {
-			SpaceQuest window = new SpaceQuest();
+			window = new SpaceQuest();
 			window.frame.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
 		
-		int i = 0;
-		// TESTING Jamepad.
+		// Gameloop.
 		while(true) {
 			ControllerState currState = controllers.getState(0);
 
@@ -55,19 +56,35 @@ public class SpaceQuest {
 			    // Passed
 			  }
 			  if(currState.a) {
-			    System.out.println("\"A\" on \"" + currState.controllerType + "\" is pressed");
-			    // Passed
+				  // TEST
+				  System.out.println("\"A\" on \"" + currState.controllerType + "\" is pressed");
+				  // Passed
 			  }
 			  if(currState.x) {
-				System.out.println("\"X\" on \"" + currState.controllerType + "\" is pressed");
-				// Passed
+				  // TEST
+				  System.out.println("\"X\" on \"" + currState.controllerType + "\" is pressed");
+				  // Passed
 			  }
 			  if(currState.rightStickMagnitude >= minMagnitude) {
+				  // TEST
 				  System.out.println("\"Right Stick\" pushed " + currState.rightStickAngle + " degrees.");
 				  System.out.println("\"Right Stick\" magnitude " + currState.rightStickMagnitude + ".");
 				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.13. Recommended 0.15 for best results.
+				  
+				  // TEST
+				  try {
+					  JLabel character = new JLabel("Josh Millerrrrr");
+					  character.setBounds(new Rectangle(10, 10, 100, 100));
+					  character.setVisible(true);
+					  window.panel.add(character);
+					  window.frame.getContentPane().add(window.panel);
+					  window.frame.setVisible(true);
+				  } catch(Exception e) { System.out.println("Exception found at character creation. Exception: " + e.toString()); }
+				  // Failed. JLabel does not appear in window.
 			  }
+				  
 			  if(currState.leftStickMagnitude >= minMagnitude) {
+				  // TEST
 				  System.out.println("\"Left\" stick pushed " + currState.leftStickAngle + " degrees.");
 				  System.out.println("\"Left Stick\" magnitude " + currState.leftStickMagnitude + ".");
 				  // Passed. Due to manufacturing imperfections, keep minMagnitude >= 0.13. Recommended 0.15 for best results.
@@ -79,7 +96,7 @@ public class SpaceQuest {
 		
 		controllers.quitSDLGamepad();
 	}
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
