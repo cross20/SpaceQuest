@@ -2,6 +2,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
+ * This class manages {@code Entity} objects. These objects
+ * represent both {@code Player} and {@code Enemy} objects.
  * 
  * @author Kyle Shepard, Chad Ross
  */
@@ -13,6 +15,13 @@ abstract class Entity {
 	protected int maxStrength, minStrength, currentStrength;
 	protected double maxMomentum, minMomentum, currentMomentum;
 	
+	/**
+	 * Initialize {@code Entity} objects.
+	 * 
+	 * @param initialHealth
+	 * @param initialStrength
+	 * @param hitbox
+	 */
 	protected void createEntity(int initialHealth, int initialStrength, int hitbox) {
 		this.maxHealth = 10;
 		this.minHealth = 0;
@@ -26,6 +35,12 @@ abstract class Entity {
 		this.hitbox = hitbox;
 	}
 	
+	/**
+	 * Add the {@code Entity} to the game window.
+	 * 
+	 * @param image
+	 * @param location
+	 */
 	protected void drawEntity(ImageIcon image, Rectangle location) {
 		
 	}

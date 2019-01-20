@@ -21,18 +21,25 @@ import java.util.concurrent.*;
  * @author Kyle Shepard, Chad Ross
  */
 public class SpaceQuest {
+	// Resolution options.
 	private int[] xRes = {1920, 1280, 1024};
 	private int[] yRes = {1080, 720, 576};
 	private static int res = 1;
-	private static double minMagnitude = 0.2;
-	private Room[][] map;
-	private static ControllerManager controllers;
+	
+	// File I/O.
 	private String curdir = System.getProperty("user.dir");
 	private String OS = System.getProperty("os.name");
+	
+	// Static members.
+	private static ControllerManager controllers;
+	private static double minMagnitude = 0.2;
 	private static JFrame frame;
 	private static JPanel panel;
 	private static JLabel character;
-
+	
+	// Game components.
+	private Room[][] map;
+	
 	/**
 	 * Launch the application.
 	 */
