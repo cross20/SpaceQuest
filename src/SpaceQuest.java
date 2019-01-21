@@ -29,7 +29,7 @@ public class SpaceQuest {
 	// GUI elements.
 	private static JFrame frame;
 	private static JPanel panel;
-	private static JLabel character;
+	private static RotateLabel character;
 	
 	// File I/O.
 	private String curdir = System.getProperty("user.dir");
@@ -86,12 +86,17 @@ public class SpaceQuest {
 					// PI is left, and -PI/2 is downward.
 					double currAngle = Math.toRadians(currState.leftStickAngle);
 					
+					//if left stick magnitude is over one, change it to one to represent that player is at maximum speed
+					double lsmag = currState.leftStickMagnitude;
+					if (lsmag > 1.0)
+						lsmag = 1.0;
+					
 					// The formula below determines what percentage out
 					// of 5 pixels the player should move in the X and Y
 					// directions. The result is approximated since it
 					// must be type int.
-					int changeX = (int)Math.round((Math.cos(currAngle)*10)/2);
-					int changeY = (int)Math.round((Math.sin(currAngle)*10)/2);
+					int changeX = (int)Math.round((Math.cos(currAngle)*5*lsmag));
+					int changeY = (int)Math.round((Math.sin(currAngle)*5*lsmag));
 					
 					// TODO: Add a check to make sure that the character doesn't leave the map.
 					
@@ -103,10 +108,15 @@ public class SpaceQuest {
 					// the Y direction being inverted).
 					character.setLocation(character.getLocation().x + changeX, character.getLocation().y - changeY );
 				}
+				
+				if(currState.rightStickMagnitude >= minMagnitude) {
+					character.setRotation(currState.rightStickAngle);
+					character.setLocation(character.getLocation().x, character.getLocation().y);
+				}
 			}
 		};
 		
-		// Schedule movePlayer to check for controller updates every 10 milisecions.
+		// Schedule movePlayer to check for controller updates every 10 milliseconds.
 		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, 10, TimeUnit.MILLISECONDS);
 		
 		// This loop will check to see if the game exit conditions are satisfied.
@@ -177,8 +187,9 @@ public class SpaceQuest {
 		panel.setBounds(0, 0, xRes[res], yRes[res]);
 		panel.setLayout(null);
 		
+
 		// Create the player
-		character = new JLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
+		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
 		character.setBounds(new Rectangle(20, 20, 128, 128));
 		
 		// TODO: Initialize the game menu.
@@ -190,18 +201,8 @@ public class SpaceQuest {
 		
 		String splitBy = " "; //information segmented by spaces
 		
-		File f;
+		File f = new File(curdir + "/assets/levels.INFO");
 		
-		// Different operating systems may use different file path systems.
-		System.out.println("OS: " + OS);
-        if(OS.equals("Mac OS X")) {
-        	f =  new File(curdir + "/assets/levels.INFO");
-        	System.out.println("Mac detected.");
-        } else {
-        	f = new File(curdir + "\\assets\\levels.INFO");
-        	System.out.println("Other OS detected.");
-        }
-        
         try(FileInputStream is = new FileInputStream(f)) {
         	InputStreamReader ir = new InputStreamReader(is);
         	BufferedReader rdr = new BufferedReader(ir);
@@ -237,5 +238,34 @@ public class SpaceQuest {
                 catch (Exception ex) { System.out.printf("Failed for %s\n", f.getName()); }
             }
         }*/
+	}
+	
+	static class RotateLabel extends JLabel {
+		private static final long serialVersionUID = 1L;
+		private double angle = 0;
+		
+		public RotateLabel( String text, int x, int y ) {
+			super(text);
+			int width = getPreferredSize().width;
+			int height = getPreferredSize().height;
+			
+			setBounds(x, y, width, height);
+		}
+		
+		public RotateLabel(ImageIcon i) {
+			super(i);
+			int width = getPreferredSize().width;
+			int height = getPreferredSize().height;
+
+		}
+		
+		@Override
+		public void paintComponent( Graphics g ) {
+			Graphics2D gx = (Graphics2D) g;
+			gx.rotate(Math.toRadians(angle), getWidth() / 2, getHeight() / 2);
+			super.paintComponent(g);
+		}
+		
+		public void setRotation( double angle ) { this.angle = angle; }
 	}
 }
