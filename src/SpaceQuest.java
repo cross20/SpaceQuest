@@ -187,7 +187,6 @@ public class SpaceQuest {
 		panel.setBounds(0, 0, xRes[res], yRes[res]);
 		panel.setLayout(null);
 		
-
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
 		character.setBounds(new Rectangle(20, 20, 128, 128));
@@ -199,48 +198,9 @@ public class SpaceQuest {
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 		
-		Room r = new Room(xRes[res], yRes[res]);
-		r.createMap(panel);
-		
-		String splitBy = " "; //information segmented by spaces
-		
-		File f = new File(curdir + "/assets/levels.INFO");
-		
-        try(FileInputStream is = new FileInputStream(f)) {
-        	InputStreamReader ir = new InputStreamReader(is);
-        	BufferedReader rdr = new BufferedReader(ir);
-        	String line = rdr.readLine();
-        	
-        	while(line != null) {
-        		String[] lineData = line.split(splitBy);
-        		
-        		line = rdr.readLine();
-        	}
-        } catch(Exception ex) { System.out.printf("Failed for %s\n", f.getName()); }
-        
-        // ISSUE: cd.listFiles() returns null.
-        /*File cd =  new File(curdir + "\\assets");
-        File[] assets = cd.listFiles();
-        
-        for (File f: assets) {
-        	
-            if (f.getName().equals("levels.INFO")) {
-            	
-            	try (FileInputStream is = new FileInputStream(f)) {
-                    InputStreamReader ir = new InputStreamReader(is);
-                    BufferedReader rdr = new BufferedReader(ir);
-                    String line = rdr.readLine();
-                    
-                    while (line != null) {
-                    	String[] lineData = line.split(splitBy);
-                    	
-                        line = rdr.readLine();
-                        
-                    }
-                }
-                catch (Exception ex) { System.out.printf("Failed for %s\n", f.getName()); }
-            }
-        }*/
+		Room r = new Room(xRes[res], yRes[res], panel);
+		r.initializeRoom();
+		r.drawRoom();
 	}
 	
 	static class RotateLabel extends JLabel {
@@ -259,13 +219,12 @@ public class SpaceQuest {
 			super(i);
 			int width = getPreferredSize().width;
 			int height = getPreferredSize().height;
-
 		}
 		
 		@Override
 		public void paintComponent( Graphics g ) {
 			Graphics2D gx = (Graphics2D) g;
-			gx.rotate(Math.toRadians(angle), getWidth() / 2, getHeight() / 2);
+			gx.rotate(-1 * Math.toRadians(angle) + 90, getWidth() / 2, getHeight() / 2);
 			super.paintComponent(g);
 		}
 		

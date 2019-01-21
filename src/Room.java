@@ -20,44 +20,61 @@ public class Room {
 	private int xPosition, yPosition;
 	private JPanel panel;
 	
-	Room(int xRes, int yRes) {
+	Room(int xRes, int yRes, JPanel panel) {
+		// Since the screen resolution is based on
+		// a 32:18 aspect ratio, determine the size
+		// needed for boundaries to be drawn in the
+		// JFrame (added to the JFrame).
 		this.xPosition = xRes/32;
 		this.yPosition = yRes/18;
+		this.panel = panel;
 		roomID = roomIDPool++;
 	}
 	
-	public void createMap(JPanel panel) {
-		this.panel = panel;
-		
-		readRoom();
-		drawRoom();
-	}
-	
-	private void readRoom() {
-		String splitBy = " "; //information segmented by spaces
+	/**
+	 * Read in data from the levels file found in the assets 
+	 * folder. Store that data for use when printing a room.
+	 */
+	public void initializeRoom() {
+		String splitBy = " "; // Information is separated by spaces in the levels file.
 		
 		File f = new File(curdir + "/assets/levels.INFO");
 		
+		// Read in text from the file to create the room map.
 		try(FileInputStream is = new FileInputStream(f)) {
 			InputStreamReader ir = new InputStreamReader(is);
 			BufferedReader rdr = new BufferedReader(ir);
 			
-			for(int i = 0; i < (roomID * 19); i++)
+			// Determine which location in the levels file to
+			// start reading in room information. Each room
+			// consists of 19 lines of information so, using
+			// roomID * 19 gives the line number which should
+			// be used to start reading in information.
+			for(int i = 0; i < (roomID * 19); i++) {
 				rdr.readLine();
-			
-			
+			}
+
+			// Initialize the lineData array to hold room
+			// map information. All rooms use a 32:18 map. 
+			// So, make 18 rows and 32 columns to match
+			// the map in the levels file.
 			lineData = new String[18][32];
 			
+			// Read the line data and store it in a 2D array.
 			for (int i = 0; i < lineData.length; i++) {
 				String line = rdr.readLine();
 				this.lineData[i] = line.split(splitBy);
-			}
-			
-			
+			}	
 		} catch(Exception ex) { System.out.printf("Failed for %s\n", f.getName()); }
 	}
 	
-	private void drawRoom() {
+	/**
+	 * Generate a JLabel at each location which represents a boundary.
+	 */
+	public void drawRoom() {
+		// Iterate through the lineData array to find which locations are
+		// boundary/wall locations. Boundaries are represented by X's in
+		// the levels file.
 		for(int column = 0; column < lineData.length; column++) {
 			for (int row = 0; row < lineData[0].length; row++) {
 				if(lineData[column][row].equals("X")) {
@@ -67,10 +84,7 @@ public class Room {
 					panel.revalidate();
 					panel.repaint();
 				}
-				
-				System.out.print(lineData[column][row] + " ");
 			}
-			System.out.println();
 		}
 	}
 }
