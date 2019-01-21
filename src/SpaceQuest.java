@@ -188,6 +188,9 @@ public class SpaceQuest {
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 		
+		Room r = new Room(xRes[res], yRes[res]);
+		r.createMap(panel);
+		
 		String splitBy = " "; //information segmented by spaces
 		
 		File f;

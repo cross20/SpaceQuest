@@ -8,8 +8,6 @@ import javax.swing.*;
  * @author Kyle Shepard, Chad Ross
  */
 abstract class Entity {
-	protected ImageIcon entityImage;
-	protected Rectangle entityLocation;
 	protected int hitbox;
 	protected int maxHealth, minHealth, currentHealth;
 	protected int maxStrength, minStrength, currentStrength;
@@ -41,7 +39,11 @@ abstract class Entity {
 	 * @param image
 	 * @param location
 	 */
-	protected void drawEntity(ImageIcon image, Rectangle location) {
-		
+	protected void drawEntity(JPanel panel, ImageIcon image, Rectangle location) {
+		JLabel label = new JLabel(image);
+		label.setBounds(location);
+		panel.add(label);
+		panel.revalidate();
+		panel.repaint();
 	}
 }
