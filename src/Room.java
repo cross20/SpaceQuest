@@ -83,6 +83,13 @@ public class Room {
 					panel.revalidate();
 					panel.repaint();
 				}
+				else {
+					JLabel test = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
+					test.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					panel.add(test);
+					panel.revalidate();
+					panel.repaint();
+				}
 			}
 		}
 	}

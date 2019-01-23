@@ -180,7 +180,7 @@ public class SpaceQuest {
 		menuPanel.setLayout(null);
 		
 		JLabel test = new JLabel("Test");
-		test.setBounds(new Rectangle(20, 20, 128, 128));
+		test.setBounds(new Rectangle(20, 20, xRes[res]/32, yRes[res]/18));
 		
 		menuPanel.add(test);
 		testFrame.getContentPane().add(menuPanel);
@@ -233,6 +233,8 @@ public class SpaceQuest {
 		r.drawRoom();
 	}
 	
+	
+	//class by CasiOo @ https://www.dreamincode.net/forums/topic/266194-rotating-a-jlabel/
 	static class RotateLabel extends JLabel {
 		private static final long serialVersionUID = 1L;
 		private double angle = 0;
@@ -254,7 +256,7 @@ public class SpaceQuest {
 		@Override
 		public void paintComponent( Graphics g ) {
 			Graphics2D gx = (Graphics2D) g;
-			gx.rotate(-1 * Math.toRadians(angle) + 90, getWidth() / 2, getHeight() / 2);
+			gx.rotate(-Math.toRadians(angle) + 90, getWidth() / 2, getHeight() / 2);
 			super.paintComponent(g);
 		}
 		
