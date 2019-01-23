@@ -40,6 +40,9 @@ public class SpaceQuest {
 	private Room[][] map;
 	static Room r;
 	
+	// Character
+	private final static int characterDimensions = 50;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -92,25 +95,23 @@ public class SpaceQuest {
 					// The formula below determines what percentage out
 					// of 5 pixels the player should move in the X and Y
 					// directions. The result is approximated since it
-					// must be type int.
+					// must be type int. Add for newX because x increases
+					// from left to right and subtract for newY because y
+					// increases from top to bottom.
 					int newX = character.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag));
 					int newY = character.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag));
 					
-					if(newX < r.getLeftWall() || newX > r.getRightWall()) {
-						newX = character.getLocation().x;
+					// Check to see if the player will stay inside of the
+					// bounds of the map. If so, update their location.
+					// Otherwise, keep their location the same.
+					if(r.checkRoomBounds(character, new Point(newX, newY))) {
+						// Update the JLabel which represents the character.
+						character.setLocation(newX, newY);
+					} else {
+						// Keep the character where they are.
+						character.setLocation(character.getLocation().x, character.getLocation().y);
 					}
 					
-					if(newY > r.getBottomWall() || newY < r.getTopWall()) {
-						newY = character.getLocation().y;
-					}
-					
-					// Update the JLabel which represents the character. Since
-					// the positive X direction moves from left to right, add
-					// changeX to the character's current location. Since the
-					// positive Y direction moves from top to bottom, subtract
-					// changY from the character's current location (to avoid
-					// the Y direction being inverted).
-					character.setLocation(newX, newY);
 				}
 			}
 		};
@@ -153,7 +154,7 @@ public class SpaceQuest {
 		controllers.quitSDLGamepad();
 	}
 	
-	public static void mainMenu() {
+	/*public static void mainMenu() {
 		JFrame testFrame = new JFrame();
 		testFrame.setResizable(false);
 		testFrame.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
@@ -181,7 +182,7 @@ public class SpaceQuest {
 				break;
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Initialize the contents of the frame.
@@ -204,7 +205,7 @@ public class SpaceQuest {
 		
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
-		character.setBounds(new Rectangle(256, 128, 50, 50));
+		character.setBounds(new Rectangle(256, 128, characterDimensions, characterDimensions));
 		
 		// TODO: Initialize the game menu.
 		
@@ -216,35 +217,5 @@ public class SpaceQuest {
 		r = new Room(xRes[res], yRes[res], panel);
 		r.initializeRoom();
 		r.drawRoom();
-	}
-	
-	
-	//class by CasiOo @ https://www.dreamincode.net/forums/topic/266194-rotating-a-jlabel/
-	static class RotateLabel extends JLabel {
-		private static final long serialVersionUID = 1L;
-		private double angle = 0;
-		
-		public RotateLabel( String text, int x, int y ) {
-			super(text);
-			int width = getPreferredSize().width;
-			int height = getPreferredSize().height;
-			
-			setBounds(x, y, width, height);
-		}
-		
-		public RotateLabel(ImageIcon i) {
-			super(i);
-			int width = getPreferredSize().width;
-			int height = getPreferredSize().height;
-		}
-		
-		@Override
-		public void paintComponent( Graphics g ) {
-			Graphics2D gx = (Graphics2D) g;
-			gx.rotate(-Math.toRadians(angle) + 90, getWidth() / 2, getHeight() / 2);
-			super.paintComponent(g);
-		}
-		
-		public void setRotation( double angle ) { this.angle = angle; }
 	}
 }

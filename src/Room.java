@@ -1,8 +1,6 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-
+import java.awt.*;
+import java.io.*;
+import java.util.*;
 import javax.swing.*;
 
 /**
@@ -18,6 +16,7 @@ public class Room {
 	private String lineData[][];
 	private int xPosition, yPosition;
 	private JPanel panel;
+	private ArrayList<JLabel> walls = new ArrayList<>();
 	
 	Room(int xRes, int yRes, JPanel panel) {
 		// Since the screen resolution is based on
@@ -52,7 +51,7 @@ public class Room {
 			for(int i = 0; i < (roomID * 19); i++) {
 				rdr.readLine();
 			}
-
+			
 			// Initialize the lineData array to hold room
 			// map information. All rooms use a 32:18 map. 
 			// So, make 18 rows and 32 columns to match
@@ -77,21 +76,73 @@ public class Room {
 		for(int column = 0; column < lineData.length; column++) {
 			for (int row = 0; row < lineData[0].length; row++) {
 				if(lineData[column][row].equals("X")) {
-					JLabel test = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
-					test.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
-					panel.add(test);
+					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
+					wall.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					panel.add(wall);
 					panel.revalidate();
 					panel.repaint();
+					walls.add(wall);
 				}
 				else {
-					JLabel test = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
-					test.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
-					panel.add(test);
+					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
+					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					panel.add(floor);
 					panel.revalidate();
 					panel.repaint();
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Checks whether an object is inside of the bounds. It does
+	 * this by taking in the character which is traveling and
+	 * checks its size against all of the bounds. It'll return
+	 * false if any of the bounds will be violated. Otherwise, 
+	 * it returns true.
+	 * 
+	 * @return boolean
+	 */
+	public boolean checkRoomBounds(JLabel character, Point newP) {
+		int wallX, wallY, wallW, wallH;
+		
+		int locX = (int)newP.getX();
+		int locY = (int)newP.getY();
+		int locW = character.getWidth() + locX;
+		int locH = character.getHeight() + locY;
+		
+		Point topLeft = new Point(locX, locY);
+		Point topRight = new Point(locW, locY);
+		Point bottomLeft = new Point(locX, locH);
+		Point bottomRight = new Point(locW, locH);
+		
+		for(JLabel wall : walls) {
+			wallX = wall.getLocation().x;
+			wallY = wall.getLocation().y;
+			wallW = wall.getWidth() + wallX;
+			wallH = wall.getHeight() + wallY;
+			
+			if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH)
+				return false;
+			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH)
+				return false;
+			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH)
+				return false;
+			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH)
+				return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean checkVerticalBounds(JLabel character, int x) {
+		
+		return true;
+	}
+	
+	public boolean checkHorizontalBounds(JLabel character, int y) {
+		
+		return true;
 	}
 	
 	public int getTopWall() {
