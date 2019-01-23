@@ -75,7 +75,14 @@ public class Room {
 		// the levels file.
 		for(int column = 0; column < lineData.length; column++) {
 			for (int row = 0; row < lineData[0].length; row++) {
-				if(lineData[column][row].equals("X")) {
+				if(lineData[column][row].equals("*")) {
+					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
+					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					panel.add(floor);
+					panel.revalidate();
+					panel.repaint();
+				}
+				else if(lineData[column][row].equals("X")) {
 					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
 					wall.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(wall);
