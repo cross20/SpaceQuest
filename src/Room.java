@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,5 +85,13 @@ public class Room {
 				}
 			}
 		}
+	}
+	
+	public int getXpos() {
+		return this.xPosition;
+	}
+	
+	public int getYpos() {
+		return this.yPosition;
 	}
 }

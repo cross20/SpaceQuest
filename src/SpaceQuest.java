@@ -4,11 +4,8 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 import com.studiohartman.jamepad.*;
 import java.lang.Math;
-import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -41,6 +38,7 @@ public class SpaceQuest {
 	
 	// Game components.
 	private Room[][] map;
+	static Room r;
 	
 	/**
 	 * Launch the application.
@@ -98,7 +96,26 @@ public class SpaceQuest {
 					int changeX = (int)Math.round((Math.cos(currAngle)*5*lsmag));
 					int changeY = (int)Math.round((Math.sin(currAngle)*5*lsmag));
 					
-					// TODO: Add a check to make sure that the character doesn't leave the map.
+					// Check to make sure that the player is inside of the X bounds.
+					// The calculation to check this is based upon the resolution of
+					// the game.
+					boolean charHitWall = false;
+					
+					double leftWall = r.getXpos() + 10;
+					double rightWall = xRes[res] - r.getXpos() + 10;
+					
+					if(character.getLocation().x <= leftWall || character.getLocation().x >= rightWall) {
+						character.setLocation(character.getLocation().x - changeX, character.getLocation().y);
+						charHitWall = true;
+					}
+					
+					double topWall = r.getYpos() + 10;
+					double bottomWall = yRes[res] - r.getYpos() + 10;
+					
+					if(character.getLocation().y <= topWall || character.getLocation().y >= bottomWall) {
+						character.setLocation(character.getLocation().x, character.getLocation().y + changeY);
+						charHitWall = true;
+					}
 					
 					// Update the JLabel which represents the character. Since
 					// the positive X direction moves from left to right, add
@@ -106,8 +123,20 @@ public class SpaceQuest {
 					// positive Y direction moves from top to bottom, subtract
 					// changY from the character's current location (to avoid
 					// the Y direction being inverted).
-					character.setLocation(character.getLocation().x + changeX, character.getLocation().y - changeY );
+					if(!charHitWall) {
+						character.setLocation(character.getLocation().x + changeX, character.getLocation().y - changeY );
+					}
 				}
+			}
+		};
+		
+		Runnable rotatePlayer = new Runnable() {
+			// TODO: Fix the rotation so that it doesn't depend upon the player moving.
+			
+			@Override
+			public void run() {
+				// Check to current state of the controller.
+				ControllerState currState = controllers.getState(0);
 				
 				if(currState.rightStickMagnitude >= minMagnitude) {
 					character.setRotation(currState.rightStickAngle);
@@ -116,8 +145,9 @@ public class SpaceQuest {
 			}
 		};
 		
-		// Schedule movePlayer to check for controller updates every 10 milliseconds.
+		// Schedule to check for controller updates every 10 milliseconds.
 		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, 10, TimeUnit.MILLISECONDS);
+		scheduledPool.scheduleWithFixedDelay(rotatePlayer, 0, 10, TimeUnit.MILLISECONDS);
 		
 		// This loop will check to see if the game exit conditions are satisfied.
 		// If they are, then stop all threads and execute the game exit process.
@@ -189,7 +219,7 @@ public class SpaceQuest {
 		
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
-		character.setBounds(new Rectangle(20, 20, 128, 128));
+		character.setBounds(new Rectangle(100, 60, 128, 128));
 		
 		// TODO: Initialize the game menu.
 		
@@ -198,7 +228,7 @@ public class SpaceQuest {
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 		
-		Room r = new Room(xRes[res], yRes[res], panel);
+		r = new Room(xRes[res], yRes[res], panel);
 		r.initializeRoom();
 		r.drawRoom();
 	}
