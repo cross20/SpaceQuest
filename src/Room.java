@@ -17,6 +17,8 @@ public class Room {
 	private int xPosition, yPosition;
 	private JPanel panel;
 	private ArrayList<JLabel> walls = new ArrayList<>();
+	private boolean horizontalBoundConflict;
+	private boolean verticalBoundConflict;
 	
 	Room(int xRes, int yRes, JPanel panel) {
 		// Since the screen resolution is based on
@@ -122,42 +124,64 @@ public class Room {
 			wallW = wall.getWidth() + wallX;
 			wallH = wall.getHeight() + wallY;
 			
-			if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH)
+			if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH) {
 				return false;
-			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH)
+			}	
+			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH) {
 				return false;
-			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH)
+			}
+			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH) {
 				return false;
-			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH)
+			}	
+			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH) {
 				return false;
+			}	
 		}
 		
 		return true;
 	}
 	
-	public boolean checkVerticalBounds(JLabel character, int x) {
+	/*public void checkRoomBounds(JLabel character, Point newP) {
+		int wallL, wallR, wallT, wallB;
 		
-		return true;
-	}
-	
-	public boolean checkHorizontalBounds(JLabel character, int y) {
+		int left = (int)newP.getX();
+		int right = left + character.getWidth();
+		int top = (int)newP.getY();
+		int bottom = top + character.getHeight();
 		
-		return true;
+		for(JLabel wall : walls) {
+			wallL = wall.getLocation().x;
+			wallR = wallL + wall.getWidth();
+			wallT = wall.getLocation().y;
+			wallB = wallT + wall.getHeight();
+			
+			if((left > wallL && left < wallR) || (top > wallT && top < wallB)) {
+				horizontalBoundConflict = true;
+				verticalBoundConflict = true;
+			}
+				
+			/*else if(bottom.getX() > wallX && bottom.getX() < wallW && bottom.getY() > wallY && bottom.getY() < wallH)
+				horizontalBoundConflict = true;
+			else
+				horizontalBoundConflict = false;
+			
+			/*if(right.getX() > wallX && right.getX() < wallW && right.getY() > wallY && right.getY() < wallH)
+				verticalBoundConflict = true;
+			else if(left.getX() > wallX && left.getX() < wallW && left.getY() > wallY && left.getY() < wallH)
+				verticalBoundConflict = true;
+			else {
+				verticalBoundConflict = false;
+				horizontalBoundConflict = false;
+			}
+				
+		}
+	}*/
+	
+	public boolean checkVerticalBounds() {
+		return verticalBoundConflict;
 	}
 	
-	public int getTopWall() {
-		return this.yPosition * 1 -10;
-	}
-	
-	public int getRightWall() {
-		return this.yPosition * 31 - 40;
-	}
-	
-	public int getBottomWall() {
-		return this.yPosition * 17 - 40;
-	}
-	
-	public int getLeftWall() {
-		return this.xPosition * 1 - 10;
+	public boolean checkHorizontalBounds() {
+		return horizontalBoundConflict;
 	}
 }
