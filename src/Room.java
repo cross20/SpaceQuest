@@ -114,49 +114,69 @@ public class Room {
 	public boolean checkRoomBounds(JLabel character, Point newP) {
 		int wallX, wallY, wallW, wallH;
 		
-		int locX = (int)newP.getX();
-		int locY = (int)newP.getY();
-		int locW = character.getWidth() + locX;
-		int locH = character.getHeight() + locY;
+		// Allow for the entity and the wall objects to overlap
+		// slightly to avoid inaccurate graphical collisions.
+		final int buffer = 7;
+		
+		// Calculate various (separate) x and y coordinates around
+		// the entity.
+		int locX = (int)newP.getX() + buffer;
+		int locY = (int)newP.getY() + buffer;
+		int locW = character.getWidth() + locX - 2*buffer;
+		int locH = character.getHeight() + locY - 2*buffer;
 		int halfW = character.getWidth()/2;
 		int halfH = character.getHeight()/2;
 		
+		// Join the x and y coordinates calculated above to determine
+		// whether the entity has collided with a wall or not.
 		Point top = new Point(locX + halfW, locY);
 		Point topRight = new Point(locW, locY);
-		Point right = new Point(locX + character.getWidth(), locY + halfH);
+		Point right = new Point(locX + character.getWidth() - 2*buffer, locY + halfH);
 		Point bottomRight = new Point(locW, locH);
-		Point bottom = new Point(locX + halfW, locY + character.getHeight());
+		Point bottom = new Point(locX + halfW, locY + character.getHeight() - 2*buffer);
 		Point bottomLeft = new Point(locX, locH);
 		Point left = new Point(locX, locY + halfH);
 		Point topLeft = new Point(locX, locY);
 		
+		// Run a check against each wall object to see if the entity's
+		// coordinates are inside of the wall. If so, return false.
+		// Otherwise, continue the check until all walls have been checked.
 		for(JLabel wall : walls) {
+			// Determine the boundaries of the current wall object.
 			wallX = wall.getLocation().x;
 			wallY = wall.getLocation().y;
 			wallW = wall.getWidth() + wallX;
 			wallH = wall.getHeight() + wallY;
 			
+			// Check the top-center of the entity.
 			if(top.getX() > wallX && top.getX() < wallW && top.getY() > wallY && top.getY() < wallH) {
 				return false;
-			}	
+			}
+			// Check the top-right of the entity.
 			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH) {
 				return false;
 			}
+			// Check the right-center of the entity.
 			else if(right.getX() > wallX && right.getX() < wallW && right.getY() > wallY && right.getY() < wallH) {
 				return false;
 			}
+			// Check the bottom-right of the entity.
 			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH) {
 				return false;
 			}
+			// Check the bottom-center of the entity.
 			else if(bottom.getX() > wallX && bottom.getX() < wallW && bottom.getY() > wallY && bottom.getY() < wallH) {
 				return false;
 			}
+			// Check the bottom-left of the entity.
 			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH) {
 				return false;
 			}
+			// Check the left-center of the entity.
 			else if(left.getX() > wallX && left.getX() < wallW && left.getY() > wallY && left.getY() < wallH) {
 				return false;
 			}
+			// Check the top-left of the entity.
 			else if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH) {
 				return false;
 			}
