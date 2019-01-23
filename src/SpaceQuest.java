@@ -93,28 +93,15 @@ public class SpaceQuest {
 					// of 5 pixels the player should move in the X and Y
 					// directions. The result is approximated since it
 					// must be type int.
-					int changeX = (int)Math.round((Math.cos(currAngle)*5*lsmag));
-					int changeY = (int)Math.round((Math.sin(currAngle)*5*lsmag));
+					int newX = character.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag));
+					int newY = character.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag));
 					
-					// Check to make sure that the player is inside of the X bounds.
-					// The calculation to check this is based upon the resolution of
-					// the game.
-					boolean charHitWall = false;
-					
-					double leftWall = r.getXpos() + 10;
-					double rightWall = xRes[res] - r.getXpos() + 10;
-					
-					if(character.getLocation().x <= leftWall || character.getLocation().x >= rightWall) {
-						character.setLocation(character.getLocation().x - changeX, character.getLocation().y);
-						charHitWall = true;
+					if(newX < r.getLeftWall() || newX > r.getRightWall()) {
+						newX = character.getLocation().x;
 					}
 					
-					double topWall = r.getYpos() + 10;
-					double bottomWall = yRes[res] - r.getYpos() + 10;
-					
-					if(character.getLocation().y <= topWall || character.getLocation().y >= bottomWall) {
-						character.setLocation(character.getLocation().x, character.getLocation().y + changeY);
-						charHitWall = true;
+					if(newY > r.getBottomWall() || newY < r.getTopWall()) {
+						newY = character.getLocation().y;
 					}
 					
 					// Update the JLabel which represents the character. Since
@@ -123,9 +110,7 @@ public class SpaceQuest {
 					// positive Y direction moves from top to bottom, subtract
 					// changY from the character's current location (to avoid
 					// the Y direction being inverted).
-					if(!charHitWall) {
-						character.setLocation(character.getLocation().x + changeX, character.getLocation().y - changeY );
-					}
+					character.setLocation(newX, newY);
 				}
 			}
 		};
@@ -219,7 +204,7 @@ public class SpaceQuest {
 		
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
-		character.setBounds(new Rectangle(100, 60, 128, 128));
+		character.setBounds(new Rectangle(256, 128, 50, 50));
 		
 		// TODO: Initialize the game menu.
 		

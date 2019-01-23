@@ -94,11 +94,19 @@ public class Room {
 		}
 	}
 	
-	public int getXpos() {
-		return this.xPosition;
+	public int getTopWall() {
+		return this.yPosition * 1 -10;
 	}
 	
-	public int getYpos() {
-		return this.yPosition;
+	public int getRightWall() {
+		return this.yPosition * 31 - 40;
+	}
+	
+	public int getBottomWall() {
+		return this.yPosition * 17 - 40;
+	}
+	
+	public int getLeftWall() {
+		return this.xPosition * 1 - 10;
 	}
 }
