@@ -49,7 +49,6 @@ public class SpaceQuest {
 	public static void main(String[] args) {
 		// TODO: Figure out how to make the mainMenu() method work.
 		runGame();
-		//mainMenu();
 	}
 
 	/**
@@ -107,14 +106,13 @@ public class SpaceQuest {
 					if(r.checkRoomBounds(character, new Point(newX, newY))) {
 						// Update the JLabel which represents the character.
 						character.setLocation(newX, newY);
-					} else if (r.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
+					} else if(r.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
 						character.setLocation(character.getLocation().x, newY);
-					} else if (r.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
+					} else if(r.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
 						character.setLocation(newX, character.getLocation().y);
 					} else {
 						character.setLocation(character.getLocation().x, character.getLocation().y);
 					}
-					
 				}
 			}
 		};
@@ -156,36 +154,6 @@ public class SpaceQuest {
 		scheduledPool.shutdown();
 		controllers.quitSDLGamepad();
 	}
-	
-	/*public static void mainMenu() {
-		JFrame testFrame = new JFrame();
-		testFrame.setResizable(false);
-		testFrame.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
-		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		testFrame.getContentPane().setLayout(null);
-		
-		JPanel menuPanel = new JPanel();
-		menuPanel.setBounds(0, 0, xRes[res], yRes[res]);
-		menuPanel.setLayout(null);
-		
-		JLabel test = new JLabel("Test");
-		test.setBounds(new Rectangle(20, 20, xRes[res]/32, yRes[res]/18));
-		
-		menuPanel.add(test);
-		testFrame.getContentPane().add(menuPanel);
-		testFrame.setVisible(true);
-		
-		while(true) {
-			ControllerState currState = controllers.getState(0);
-			
-			if(currState.a) {
-				runGame();
-			}
-			if(currState.b || !currState.isConnected) {
-				break;
-			}
-		}
-	}*/
 	
 	/**
 	 * Initialize the contents of the frame.
