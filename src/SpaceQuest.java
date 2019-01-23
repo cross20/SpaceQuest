@@ -22,6 +22,7 @@ public class SpaceQuest {
 	private static int[] xRes = {1920, 1280, 1024};
 	private static int[] yRes = {1080, 720, 576};
 	private static int res = 1;
+	private static double frameRate = 30;
 
 	// GUI elements.
 	private static JFrame frame;
@@ -72,7 +73,7 @@ public class SpaceQuest {
 			window.frame.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		currRoom.drawRoom();
+		currRoom.drawRoom(character);
 
 		// movePlayer checks to see if the the leftStick is active
 		// and determines where to move the player if it is.
@@ -99,8 +100,8 @@ public class SpaceQuest {
 					// must be type int. Add for newX because x increases
 					// from left to right and subtract for newY because y
 					// increases from top to bottom.
-					int newX = character.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag));
-					int newY = character.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag));
+					int newX = character.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag*2));
+					int newY = character.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag*2));
 
 					// Check to see if the player will stay inside of the
 					// bounds of the map. If so, update their location.
@@ -131,6 +132,7 @@ public class SpaceQuest {
 					character.setRotation(currState.rightStickAngle);
 					character.setLocation(character.getLocation().x, character.getLocation().y);
 				}
+				frame.repaint();
 			}
 		};
 
@@ -141,26 +143,32 @@ public class SpaceQuest {
 				int centerX = character.getX() + (character.getWidth() / 2);
 				int centerY = character.getY() + (character.getHeight() / 2);
 
+				//System.out.printf("room [%d] [%d]\n",Room.currColumn,Room.currRow);
+				
 				if(centerY <= 0 && Room.currColumn > 0) {
-					currRoom = map[Room.currRow][Room.currColumn--];
+					currRoom = map[--Room.currColumn][Room.currRow];
+					currRoom.drawRoom(character);
 
 				} else if (centerY >= yRes[res] && Room.currColumn < 17) {
-					currRoom = map[Room.currRow][Room.currColumn++];
+					currRoom = map[++Room.currColumn][Room.currRow];
+					currRoom.drawRoom(character);
 
 				} else if (centerX <= 0 && Room.currRow > 0) {
-					currRoom = map[Room.currRow--][Room.currColumn];
+					currRoom = map[Room.currColumn][--Room.currRow];
+					currRoom.drawRoom(character);
 
 				} else if (centerX >= xRes[res] && Room.currRow < 31) {
-					currRoom = map[Room.currRow++][Room.currColumn];
+					currRoom = map[Room.currColumn][++Room.currRow];
+					currRoom.drawRoom(character);
 				}
-
 			}
 		};
 
 		// Schedule to check for controller updates every 10 milliseconds.
-		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, 10, TimeUnit.MILLISECONDS);
-		scheduledPool.scheduleWithFixedDelay(rotatePlayer, 0, 10, TimeUnit.MILLISECONDS);
-
+		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, (int)(frameRate), TimeUnit.MILLISECONDS);
+		scheduledPool.scheduleWithFixedDelay(rotatePlayer, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
+		scheduledPool.scheduleWithFixedDelay(changeRoom, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
+		
 		frame.repaint();
 		// This loop will check to see if the game exit conditions are satisfied.
 		// If they are, then stop all threads and execute the game exit process.
@@ -207,7 +215,6 @@ public class SpaceQuest {
 		// TODO: Initialize the game menu.
 
 		// Add all GUI components to the JFrame
-		panel.add(character);
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 
