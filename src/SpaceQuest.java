@@ -104,11 +104,16 @@ public class SpaceQuest {
 					// Check to see if the player will stay inside of the
 					// bounds of the map. If so, update their location.
 					// Otherwise, keep their location the same.
+					
+					
 					if(r.checkRoomBounds(character, new Point(newX, newY))) {
 						// Update the JLabel which represents the character.
 						character.setLocation(newX, newY);
+					} else if (r.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
+						character.setLocation(character.getLocation().x, newY);
+					} else if (r.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
+						character.setLocation(newX, character.getLocation().y);
 					} else {
-						// Keep the character where they are.
 						character.setLocation(character.getLocation().x, character.getLocation().y);
 					}
 					

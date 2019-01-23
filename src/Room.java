@@ -104,9 +104,10 @@ public class Room {
 	/**
 	 * Checks whether an object is inside of the bounds. It does
 	 * this by taking in the character which is traveling and
-	 * checks its size against all of the bounds. It'll return
-	 * false if any of the bounds will be violated. Otherwise, 
-	 * it returns true.
+	 * the point that it is traveling to. With this, the method
+	 * checks the character's size against all of the bounds. 
+	 * It'll return false if any of the bounds will be violated.
+	 * Otherwise, it returns true.
 	 * 
 	 * @return boolean
 	 */
@@ -117,11 +118,17 @@ public class Room {
 		int locY = (int)newP.getY();
 		int locW = character.getWidth() + locX;
 		int locH = character.getHeight() + locY;
+		int halfW = character.getWidth()/2;
+		int halfH = character.getHeight()/2;
 		
-		Point topLeft = new Point(locX, locY);
+		Point top = new Point(locX + halfW, locY);
 		Point topRight = new Point(locW, locY);
-		Point bottomLeft = new Point(locX, locH);
+		Point right = new Point(locX + character.getWidth(), locY + halfH);
 		Point bottomRight = new Point(locW, locH);
+		Point bottom = new Point(locX + halfW, locY + character.getHeight());
+		Point bottomLeft = new Point(locX, locH);
+		Point left = new Point(locX, locY + halfH);
+		Point topLeft = new Point(locX, locY);
 		
 		for(JLabel wall : walls) {
 			wallX = wall.getLocation().x;
@@ -129,42 +136,32 @@ public class Room {
 			wallW = wall.getWidth() + wallX;
 			wallH = wall.getHeight() + wallY;
 			
-			if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH)
+			if(top.getX() > wallX && top.getX() < wallW && top.getY() > wallY && top.getY() < wallH) {
 				return false;
-			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH)
+			}	
+			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH) {
 				return false;
-			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH)
+			}
+			else if(right.getX() > wallX && right.getX() < wallW && right.getY() > wallY && right.getY() < wallH) {
 				return false;
-			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH)
+			}
+			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH) {
 				return false;
+			}
+			else if(bottom.getX() > wallX && bottom.getX() < wallW && bottom.getY() > wallY && bottom.getY() < wallH) {
+				return false;
+			}
+			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH) {
+				return false;
+			}
+			else if(left.getX() > wallX && left.getX() < wallW && left.getY() > wallY && left.getY() < wallH) {
+				return false;
+			}
+			else if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH) {
+				return false;
+			}
 		}
 		
 		return true;
-	}
-	
-	public boolean checkVerticalBounds(JLabel character, int x) {
-		
-		return true;
-	}
-	
-	public boolean checkHorizontalBounds(JLabel character, int y) {
-		
-		return true;
-	}
-	
-	public int getTopWall() {
-		return this.yPosition * 1 -10;
-	}
-	
-	public int getRightWall() {
-		return this.yPosition * 31 - 40;
-	}
-	
-	public int getBottomWall() {
-		return this.yPosition * 17 - 40;
-	}
-	
-	public int getLeftWall() {
-		return this.xPosition * 1 - 10;
 	}
 }
