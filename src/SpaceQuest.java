@@ -37,8 +37,8 @@ public class SpaceQuest {
 	private static double minMagnitude = 0.2;
 	
 	// Game components.
-	private Room[][] map;
-	static Room r;
+	private static Room[][] map;
+	private static Room currRoom;
 	
 	// Character
 	private final static int characterDimensions = 50;
@@ -63,7 +63,7 @@ public class SpaceQuest {
 	 * Run the game
 	 */
 	public static void runGame() {
-		// TODO: Initialize the game map.
+		
 		
 		// Create threads to check/run multiple game components at the same time.
 		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(5);
@@ -72,6 +72,8 @@ public class SpaceQuest {
 			SpaceQuest window = new SpaceQuest();
 			window.frame.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
+		
+		currRoom.drawRoom();
 		
 		// movePlayer checks to see if the the leftStick is active
 		// and determines where to move the player if it is.
@@ -104,12 +106,12 @@ public class SpaceQuest {
 					// Check to see if the player will stay inside of the
 					// bounds of the map. If so, update their location.
 					// Otherwise, keep their location the same.
-					if(r.checkRoomBounds(character, new Point(newX, newY))) {
+					if(currRoom.checkRoomBounds(character, new Point(newX, newY))) {
 						// Update the JLabel which represents the character.
 						character.setLocation(newX, newY);
-					} else if (r.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
+					} else if (currRoom.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
 						character.setLocation(character.getLocation().x, newY);
-					} else if (r.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
+					} else if (currRoom.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
 						character.setLocation(newX, character.getLocation().y);
 					} else {
 						character.setLocation(character.getLocation().x, character.getLocation().y);
@@ -134,10 +136,34 @@ public class SpaceQuest {
 			}
 		};
 		
+		Runnable changeRoom = new Runnable() {
+			
+			@Override
+			public void run() {
+				int centerX = character.getX() + (character.getWidth() / 2);
+				int centerY = character.getY() + (character.getHeight() / 2);
+				
+				if(centerY <= 0 && Room.currColumn > 0) {
+					currRoom = map[Room.currRow][Room.currColumn--];
+					
+				} else if (centerY >= yRes[res] && Room.currColumn < 17) {
+					currRoom = map[Room.currRow][Room.currColumn++];
+					
+				} else if (centerX <= 0 && Room.currRow > 0) {
+					currRoom = map[Room.currRow--][Room.currColumn];
+					
+				} else if (centerX >= xRes[res] && Room.currRow < 31) {
+					currRoom = map[Room.currRow++][Room.currColumn];
+				}
+				
+			}
+		};
+		
 		// Schedule to check for controller updates every 10 milliseconds.
 		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, 10, TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(rotatePlayer, 0, 10, TimeUnit.MILLISECONDS);
 		
+		frame.repaint();
 		// This loop will check to see if the game exit conditions are satisfied.
 		// If they are, then stop all threads and execute the game exit process.
 		while(true) {
@@ -217,8 +243,15 @@ public class SpaceQuest {
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 		
-		r = new Room(xRes[res], yRes[res], panel);
-		r.initializeRoom();
-		r.drawRoom();
+		map = new Room[4][5];
+		for( int row = 0; row < map.length; row++) {
+			for (int col = 0; col < map[row].length; col++) {
+				map[row][col] = new Room(xRes[res], yRes[res], panel);
+				map[row][col].initializeRoom();
+			}
+		}
+		
+		currRoom = map[0][0];
+		//currRoom.drawRoom();
 	}
 }

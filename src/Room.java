@@ -11,6 +11,9 @@ import javax.swing.*;
  */
 public class Room {
 	private static int roomIDPool = 0;
+	public static int currColumn = 0;
+	public static int currRow = 0;
+	
 	private int roomID;
 	private String curdir = System.getProperty("user.dir");
 	private String lineData[][];
@@ -184,4 +187,10 @@ public class Room {
 		
 		return true;
 	}
+	
+	/*public int getColumn() { return currColumn; }
+	public int getRow() { return currRow; }
+	
+	public void setColumn( int column ) { currColumn = column; }
+	public void setRow( int row ) { currRow = row; }*/
 }
