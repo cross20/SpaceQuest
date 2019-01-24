@@ -130,15 +130,15 @@ public class MainMenu {
 				selectionLabels[selectionIndex].setForeground(Color.white);
 				selectionLabels[selectionIndex].setFont(new Font("Dialog", Font.PLAIN, 15));
 			}
-		} 
+		}
 		
 		// Check to see if an item has been selected.
-		else if(currState.aJustPressed) {
+		else if(currState.a) {
 			this.choice = selectionText[selectionIndex];
 		} 
 		
 		// Check to see if the quit game option has been selected ('b' prompts this action).
-		else if(currState.bJustPressed) {
+		else if(currState.b) {
 			this.choice = "QUIT GAME";
 		}
 	}
@@ -151,5 +151,15 @@ public class MainMenu {
 	 */
 	public String getChoice() {
 		return this.choice;
+	}
+	
+	public void howToPlay() {
+		System.out.println("Credits: Kyle Shepard and Chad Ross.\nHow to Play was selected. Game starting now.");
+		// TODO: Add the code that shows how to play (and the credits).
+	}
+	
+	public void settings() {
+		System.out.println("Settings were selected. Game starting now.");
+		// TODO: Add the code that controls the settings.
 	}
 }

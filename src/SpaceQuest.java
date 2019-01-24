@@ -78,18 +78,16 @@ public class SpaceQuest {
 			mm.checkSelectionUpdate(controllers.getState(0));
 			
 			if(mm.getChoice().equals("START GAME")) {
-				
+				// Do nothing
 			} else if(mm.getChoice().equals("HOW TO PLAY")) {
-				
+				mm.howToPlay();
 			} else if(mm.getChoice().equals("SETTINGS")) {
-				
+				mm.settings();
 			} else if(mm.getChoice().equals("QUIT GAME")) {
 				quitGame();
 			}
 		}
 		
-		
-
 		currRoom.drawRoom(character);
 
 		// movePlayer checks to see if the the leftStick is active
