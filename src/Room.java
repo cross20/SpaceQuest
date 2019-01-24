@@ -102,6 +102,7 @@ public class Room {
 					wall.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(wall);
 					walls.add(wall);
+					System.out.println("Wall found at (" + column + ", " + row + ").");
 				}
 				else {
 					drawFloor(row, column);
@@ -162,34 +163,42 @@ public class Room {
 
 			// Check the top-center of the entity.
 			if(top.getX() > wallX && top.getX() < wallW && top.getY() > wallY && top.getY() < wallH) {
+				System.out.println("Wall found at top");
 				return false;
 			}
 			// Check the top-right of the entity.
 			else if(topRight.getX() > wallX && topRight.getX() < wallW && topRight.getY() > wallY && topRight.getY() < wallH) {
+				System.out.println("Wall found at top right");
 				return false;
 			}
 			// Check the right-center of the entity.
 			else if(right.getX() > wallX && right.getX() < wallW && right.getY() > wallY && right.getY() < wallH) {
+				System.out.println("Wall found at right");
 				return false;
 			}
 			// Check the bottom-right of the entity.
 			else if(bottomRight.getX() > wallX && bottomRight.getX() < wallW && bottomRight.getY() > wallY && bottomRight.getY() < wallH) {
+				System.out.println("Wall found at bottom right");
 				return false;
 			}
 			// Check the bottom-center of the entity.
 			else if(bottom.getX() > wallX && bottom.getX() < wallW && bottom.getY() > wallY && bottom.getY() < wallH) {
+				System.out.println("Wall found at bottom");
 				return false;
 			}
 			// Check the bottom-left of the entity.
 			else if(bottomLeft.getX() > wallX && bottomLeft.getX() < wallW && bottomLeft.getY() > wallY && bottomLeft.getY() < wallH) {
+				System.out.println("Wall found at bottom left");
 				return false;
 			}
 			// Check the left-center of the entity.
 			else if(left.getX() > wallX && left.getX() < wallW && left.getY() > wallY && left.getY() < wallH) {
+				System.out.println("Wall found at left");
 				return false;
 			}
 			// Check the top-left of the entity.
 			else if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH) {
+				System.out.println("Wall found at top left");
 				return false;
 			}
 		}
@@ -203,34 +212,42 @@ public class Room {
 			enemyH = enemyY + e.getRotateLabel().getHeight();
 			
 			if(top.getX() > enemyX && top.getX() < enemyW && top.getY() > enemyY && top.getY() < enemyH) {
+				System.out.println("Enemy found at top");
 				return false;
 			}
 			// Check the top-right of the entity.
 			else if(topRight.getX() > enemyX && topRight.getX() < enemyW && topRight.getY() > enemyY && topRight.getY() < enemyH) {
+				System.out.println("Enemy found at top right");
 				return false;
 			}
 			// Check the right-center of the entity.
 			else if(right.getX() > enemyX && right.getX() < enemyW && right.getY() > enemyY && right.getY() < enemyH) {
+				System.out.println("Enemy found at right");
 				return false;
 			}
 			// Check the bottom-right of the entity.
 			else if(bottomRight.getX() > enemyX && bottomRight.getX() < enemyW && bottomRight.getY() > enemyY && bottomRight.getY() < enemyH) {
+				System.out.println("Enemy found at bottom right");
 				return false;
 			}
 			// Check the bottom-center of the entity.
 			else if(bottom.getX() > enemyX && bottom.getX() < enemyW && bottom.getY() > enemyY && bottom.getY() < enemyH) {
+				System.out.println("Enemy found at bottom");
 				return false;
 			}
 			// Check the bottom-left of the entity.
 			else if(bottomLeft.getX() > enemyX && bottomLeft.getX() < enemyW && bottomLeft.getY() > enemyY && bottomLeft.getY() < enemyH) {
+				System.out.println("Enemy found at bottom left");
 				return false;
 			}
 			// Check the left-center of the entity.
 			else if(left.getX() > enemyX && left.getX() < enemyW && left.getY() > enemyY && left.getY() < enemyH) {
+				System.out.println("Enemy found at left");
 				return false;
 			}
 			// Check the top-left of the entity.
 			else if(topLeft.getX() > enemyX && topLeft.getX() < enemyW && topLeft.getY() > enemyY && topLeft.getY() < enemyH) {
+				System.out.println("Enemy found at top left");
 				return false;
 			}
 		}
