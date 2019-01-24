@@ -6,21 +6,22 @@ import javax.swing.*;
 /**
  * This class manages each {@code Room} inside of
  * the game map.
- * 
+ *
  * @author Kyle Shepard, Chad Ross
  */
 public class Room {
 	private static int roomIDPool = 0;
 	public static int currColumn = 0;
 	public static int currRow = 0;
-	
+
 	private int roomID;
 	private String curdir = System.getProperty("user.dir");
 	private String lineData[][];
 	private int xPosition, yPosition;
 	private JPanel panel;
 	private ArrayList<JLabel> walls = new ArrayList<>();
-	
+	private ArrayList<Enemy> enemies = new ArrayList<>();
+
 	Room(int xRes, int yRes, JPanel panel) {
 		// Since the screen resolution is based on
 		// a 32:18 aspect ratio, determine the size
@@ -31,21 +32,21 @@ public class Room {
 		this.panel = panel;
 		roomID = roomIDPool++;
 	}
-	
+
 	/**
-	 * Read in data from the levels file found in the assets 
+	 * Read in data from the levels file found in the assets
 	 * folder. Store that data for use when printing a room.
 	 */
 	public void initializeRoom() {
 		String splitBy = " "; // Information is separated by spaces in the levels file.
-		
+
 		File f = new File(curdir + "/assets/levels.INFO");
-		
+
 		// Read in text from the file to create the room map.
 		try(FileInputStream is = new FileInputStream(f)) {
 			InputStreamReader ir = new InputStreamReader(is);
 			BufferedReader rdr = new BufferedReader(ir);
-			
+
 			// Determine which location in the levels file to
 			// start reading in room information. Each room
 			// consists of 19 lines of information so, using
@@ -54,21 +55,21 @@ public class Room {
 			for(int i = 0; i < (roomID * 19); i++) {
 				rdr.readLine();
 			}
-			
+
 			// Initialize the lineData array to hold room
-			// map information. All rooms use a 32:18 map. 
+			// map information. All rooms use a 32:18 map.
 			// So, make 18 rows and 32 columns to match
 			// the map in the levels file.
 			lineData = new String[18][32];
-			
+
 			// Read the line data and store it in a 2D array.
 			for (int i = 0; i < lineData.length; i++) {
 				String line = rdr.readLine();
 				this.lineData[i] = line.split(splitBy);
-			}	
+			}
 		} catch(Exception ex) { System.out.printf("Failed for %s\n", f.getName()); }
 	}
-	
+
 	/**
 	 * Generate a JLabel at each location which represents a boundary.
 	 */
@@ -79,15 +80,21 @@ public class Room {
 		panel.removeAll();
 		character.setLocation(x, y);
 		panel.add(character);
-		
+
 		for(int column = 0; column < lineData.length; column++) {
 			for (int row = 0; row < lineData[0].length; row++) {
 				if(lineData[column][row].equals("*")) {
-					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
-					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
-					panel.add(floor);
-					panel.revalidate();
-					panel.repaint();
+					JLabel space = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
+					space.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					panel.add(space);
+				}
+				else if(lineData[column][row].equals("E")) {
+					drawFloor(row, column);
+					RotateLabel l = new RotateLabel(new ImageIcon("/assets/textures/enemy.png"));
+					l.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					Enemy e = new Enemy(3, 3, 1, l);
+					enemies.add(e);
+					e.drawEntity(panel, l.getLocation());
 				}
 				else if(lineData[column][row].equals("X")) {
 					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
@@ -98,33 +105,29 @@ public class Room {
 					walls.add(wall);
 				}
 				else {
-					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
-					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
-					panel.add(floor);
-					panel.revalidate();
-					panel.repaint();
+					drawFloor(row, column);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks whether an object is inside of the bounds. It does
 	 * this by taking in the character which is traveling and
 	 * the point that it is traveling to. With this, the method
-	 * checks the character's size against all of the bounds. 
+	 * checks the character's size against all of the bounds.
 	 * It'll return false if any of the bounds will be violated.
 	 * Otherwise, it returns true.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean checkRoomBounds(JLabel character, Point newP) {
 		int wallX, wallY, wallW, wallH;
-		
+
 		// Allow for the entity and the wall objects to overlap
 		// slightly to avoid inaccurate graphical collisions.
-		final int buffer = 7;
-		
+		final int buffer = 6;
+
 		// Calculate various (separate) x and y coordinates around
 		// the entity.
 		int locX = (int)newP.getX() + buffer;
@@ -133,7 +136,7 @@ public class Room {
 		int locH = character.getHeight() + locY - 2*buffer;
 		int halfW = character.getWidth()/2;
 		int halfH = character.getHeight()/2;
-		
+
 		// Join the x and y coordinates calculated above to determine
 		// whether the entity has collided with a wall or not.
 		Point top = new Point(locX + halfW, locY);
@@ -144,7 +147,7 @@ public class Room {
 		Point bottomLeft = new Point(locX, locH);
 		Point left = new Point(locX, locY + halfH);
 		Point topLeft = new Point(locX, locY);
-		
+
 		// Run a check against each wall object to see if the entity's
 		// coordinates are inside of the wall. If so, return false.
 		// Otherwise, continue the check until all walls have been checked.
@@ -154,7 +157,7 @@ public class Room {
 			wallY = wall.getLocation().y;
 			wallW = wall.getWidth() + wallX;
 			wallH = wall.getHeight() + wallY;
-			
+
 			// Check the top-center of the entity.
 			if(top.getX() > wallX && top.getX() < wallW && top.getY() > wallY && top.getY() < wallH) {
 				return false;
@@ -188,13 +191,46 @@ public class Room {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	/*public int getColumn() { return currColumn; }
-	public int getRow() { return currRow; }
-	
-	public void setColumn( int column ) { currColumn = column; }
-	public void setRow( int row ) { currRow = row; }*/
+
+	/**
+	 * Get the size of the {@code ArrayList enemies}.
+	 * @return int
+	 */
+	public int getNumEnemies() {
+		return enemies.size();
+	}
+
+	/**
+	 * Get the enemy at the specified index.
+	 *
+	 * @param index
+	 * @return Enemy
+	 */
+	public Enemy getEnemy(int index) {
+		return enemies.get(index);
+	}
+
+	/**
+	 * Get all of the enemies in the room.
+	 *
+	 * @return ArrayList<Enemy>
+	 */
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	/**
+	 * Draw the floor texture at the specified location.
+	 *
+	 * @param row
+	 * @param column
+	 */
+	private void drawFloor(int row, int column) {
+		JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
+		floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+		panel.add(floor);
+	}
 }

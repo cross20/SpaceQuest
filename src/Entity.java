@@ -14,6 +14,7 @@ abstract class Entity {
 	protected int maxHealth, minHealth, currentHealth;
 	protected int maxStrength, minStrength, currentStrength;
 	protected double maxMomentum, minMomentum, currentMomentum;
+	protected RotateLabel entity;
 	
 	/**
 	 * Initialize {@code Entity} objects.
@@ -22,7 +23,7 @@ abstract class Entity {
 	 * @param initialStrength
 	 * @param hitbox
 	 */
-	protected void createEntity(int initialHealth, int initialStrength, int hitbox) {
+	protected void createEntity(int initialHealth, int initialStrength, int hitbox, RotateLabel entity) {
 		this.maxHealth = 10;
 		this.minHealth = 0;
 		this.currentHealth = initialHealth;
@@ -33,6 +34,7 @@ abstract class Entity {
 		this.minMomentum = -10;
 		this.currentMomentum = 0;
 		this.hitbox = hitbox;
+		this.entity = entity;
 	}
 	
 	/**
@@ -41,9 +43,9 @@ abstract class Entity {
 	 * @param image
 	 * @param location
 	 */
-	protected void drawEntity(JPanel panel, ImageIcon image, Rectangle location) {
-		JLabel label = new JLabel(image);
-		label.setBounds(location);
+	protected void drawEntity(JPanel panel, Point location) {
+		JLabel label = new JLabel();
+		label.setLocation(location);
 		panel.add(label);
 		panel.revalidate();
 		panel.repaint();
@@ -59,9 +61,9 @@ abstract class Entity {
 	 * @param character
 	 * @param currRoom
 	 */
-	protected void updateEntityLocation(ControllerState currState, RotateLabel character, Room currRoom) {
+	protected void updateEntityLocation(ControllerState currState, Room currRoom) {
 		if(currState.leftStickMagnitude >= SpaceQuest.minMagnitude) {
-			System.out.println(character.getLocation());
+			System.out.println(entity.getLocation());
 			
 			// Determine what direction to send the player.
 			// For reference, 0 is right, PI/2 is upward,
@@ -79,39 +81,50 @@ abstract class Entity {
 			// must be type int. Add for newX because x increases
 			// from left to right and subtract for newY because y
 			// increases from top to bottom.
-			int newX = character.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag*2));
-			int newY = character.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag*2));
+			int newX = entity.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag*2));
+			int newY = entity.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag*2));
 
 			// Check to see if the player will stay inside of the
 			// bounds of the map. If so, update their location.
 			// Otherwise, keep their location the same.
-			if(currRoom.checkRoomBounds(character, new Point(newX, newY))) {
+			if(currRoom.checkRoomBounds(entity, new Point(newX, newY))) {
 				// Update the JLabel which represents the character.
-				character.setLocation(newX, newY);
-			} else if (currRoom.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
-				character.setLocation(character.getLocation().x, newY);
-			} else if (currRoom.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
-				character.setLocation(newX, character.getLocation().y);
+				entity.setLocation(newX, newY);
+			} else if (currRoom.checkRoomBounds(entity, new Point(entity.getLocation().x, newY))) {
+				entity.setLocation(entity.getLocation().x, newY);
+			} else if (currRoom.checkRoomBounds(entity, new Point(newX, entity.getLocation().y))) {
+				entity.setLocation(newX, entity.getLocation().y);
 			} else {
-				character.setLocation(character.getLocation().x, character.getLocation().y);
+				entity.setLocation(entity.getLocation().x, entity.getLocation().y);
 			}
 		}
 	}
 	
-	/**
-	 * Sets the entity's rotation equal to the angle of the right stick.
-	 * 
-	 * @param currState
-	 * @param character
-	 */
-	protected void updateEntityRotation(ControllerState currState, RotateLabel character) {
-		if(currState.rightStickMagnitude >= SpaceQuest.minMagnitude) {
-			character.setRotation(currState.rightStickAngle);
-			character.setLocation(character.getLocation().x, character.getLocation().y);
+	public void setCurrentHealth(int health) {
+		if(health >= this.minHealth && health <= this.maxHealth) {
+			this.currentHealth = health;
+		} else {
+			System.out.println("Health out of bounds. No change applied.");
 		}
 	}
 	
-	/*protected void fireProjectile() {
+	public void setCurrentStrength(int strength) {
+		if(strength >= this.minStrength && strength <= this.maxStrength) {
+			this.currentStrength = strength;
+		} else {
+			System.out.println("Strength out of bounds. No change applied.");
+		}
+	}
+	
+	/*public void fireProjectile() {
 		Projectile p = new Projectile()
 	}*/
+
+	public int getCurrentHealth() {
+		return this.currentHealth;
+	}
+	
+	public int getCurrentStrength() {
+		return this.currentStrength;
+	}
 }
