@@ -89,19 +89,17 @@ public class Room {
 					panel.add(space);
 				}
 				else if(lineData[column][row].equals("E")) {
-					drawFloor(row, column);
-					RotateLabel l = new RotateLabel(new ImageIcon("/assets/textures/enemy.png"));
+					RotateLabel l = new RotateLabel(new ImageIcon(curdir + "/assets/textures/enemy.png"));
 					l.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					Enemy e = new Enemy(3, 3, 1, l);
 					enemies.add(e);
-					e.drawEntity(panel, l.getLocation());
+					e.drawEntity(l, panel, l.getLocation());
+					drawFloor(row, column);
 				}
 				else if(lineData[column][row].equals("X")) {
 					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
 					wall.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(wall);
-					panel.revalidate();
-					panel.repaint();
 					walls.add(wall);
 				}
 				else {
@@ -109,6 +107,8 @@ public class Room {
 				}
 			}
 		}
+		panel.revalidate();
+		panel.repaint();
 	}
 
 	/**

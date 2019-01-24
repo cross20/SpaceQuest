@@ -40,13 +40,13 @@ abstract class Entity {
 	/**
 	 * Add the {@code Entity} to the game window.
 	 * 
-	 * @param image
+	 * @param entity
+	 * @param panel
 	 * @param location
 	 */
-	protected void drawEntity(JPanel panel, Point location) {
-		JLabel label = new JLabel();
-		label.setLocation(location);
-		panel.add(label);
+	protected void drawEntity(RotateLabel entity, JPanel panel, Point location) {
+		entity.setLocation(location);
+		panel.add(entity);
 		panel.revalidate();
 		panel.repaint();
 	}
