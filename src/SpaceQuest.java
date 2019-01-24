@@ -28,6 +28,7 @@ public class SpaceQuest {
 	private static JFrame frame;
 	private static JPanel panel;
 	private static RotateLabel character;
+	private static MainMenu mm;
 
 	// File I/O.
 	private String curdir = System.getProperty("user.dir");
@@ -35,7 +36,7 @@ public class SpaceQuest {
 
 	// Controller.
 	private static ControllerManager controllers;
-	private static double minMagnitude = 0.2;
+	public static double minMagnitude = 0.2;
 
 	// Game components.
 	private static Room[][] map;
@@ -63,17 +64,31 @@ public class SpaceQuest {
 	 * Run the game
 	 */
 	public static void runGame() {
-
-
 		// Create threads to check/run multiple game components at the same time.
 		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(5);
 
 		try {
 			SpaceQuest window = new SpaceQuest();
+			window.frame.setBackground(Color.black);
 			window.frame.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
-
-		currRoom.drawRoom(character, xRes[res]/2, yRes[res]/2);
+		
+		// Loop until a menu selection has been made on the main menu.
+		while(mm.getChoice() == "NO SELECTION MADE") {
+			mm.checkSelectionUpdate(controllers.getState(0));
+			
+			if(mm.getChoice().equals("START GAME")) {
+				// Do nothing
+			} else if(mm.getChoice().equals("HOW TO PLAY")) {
+				mm.howToPlay();
+			} else if(mm.getChoice().equals("SETTINGS")) {
+				mm.settings();
+			} else if(mm.getChoice().equals("QUIT GAME")) {
+				quitGame();
+			}
+		}
+		
+		currRoom.drawRoom(character, xRes[res]/2, yRes[res]/2));
 
 		// movePlayer checks to see if the the leftStick is active
 		// and determines where to move the player if it is.
@@ -84,6 +99,8 @@ public class SpaceQuest {
 				ControllerState currState = controllers.getState(0);
 
 				if(currState.leftStickMagnitude >= minMagnitude) {
+					System.out.println(character.getLocation());
+					
 					// Determine what direction to send the player.
 					// For reference, 0 is right, PI/2 is upward,
 					// PI is left, and -PI/2 is downward.
@@ -177,6 +194,7 @@ public class SpaceQuest {
 		scheduledPool.scheduleWithFixedDelay(changeRoom, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		
 		frame.repaint();
+		
 		// This loop will check to see if the game exit conditions are satisfied.
 		// If they are, then stop all threads and execute the game exit process.
 		while(true) {
@@ -194,6 +212,13 @@ public class SpaceQuest {
 		// Process to exit the game.
 		scheduledPool.shutdown();
 		controllers.quitSDLGamepad();
+		quitGame();
+	}
+	
+	private static void quitGame() {
+		frame.setVisible(false);
+		frame.dispose();
+		System.exit(0);
 	}
 
 	/**
@@ -214,12 +239,11 @@ public class SpaceQuest {
 		panel = new JPanel();
 		panel.setBounds(0, 0, xRes[res], yRes[res]);
 		panel.setLayout(null);
+		panel.setBackground(Color.black);
 
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
 		character.setBounds(new Rectangle(256, 128, characterDimensions, characterDimensions));
-
-		// TODO: Initialize the game menu.
 
 		// Add all GUI components to the JFrame
 		frame.getContentPane().add(panel);
@@ -232,8 +256,9 @@ public class SpaceQuest {
 				map[row][col].initializeRoom();
 			}
 		}
-
 		currRoom = map[0][0];
-		//currRoom.drawRoom();
+		
+		mm = new MainMenu(xRes[res], yRes[res]);
+		mm.drawMenu(panel);
 	}
 }
