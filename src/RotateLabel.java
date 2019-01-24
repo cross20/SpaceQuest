@@ -28,7 +28,7 @@ public class RotateLabel extends JLabel {
 	@Override
 	public void paintComponent( Graphics g ) {
 		Graphics2D gx = (Graphics2D) g;
-		gx.rotate(-Math.toRadians(angle) + 90, getWidth() / 2, getHeight() / 2);
+		gx.rotate(-Math.toRadians(angle+ 270), getWidth() / 2, getHeight() / 2);
 		super.paintComponent(g);
 	}
 	

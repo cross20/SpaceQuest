@@ -88,7 +88,7 @@ public class SpaceQuest {
 			}
 		}
 		
-		currRoom.drawRoom(character, xRes[res]/2, yRes[res]/2));
+		currRoom.drawRoom(character, xRes[res]/2, yRes[res]/2);
 
 		// movePlayer checks to see if the the leftStick is active
 		// and determines where to move the player if it is.
