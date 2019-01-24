@@ -21,6 +21,7 @@ public class Room {
 	private JPanel panel;
 	private ArrayList<JLabel> walls = new ArrayList<>();
 	private ArrayList<Enemy> enemies = new ArrayList<>();
+	private ArrayList<Projectile> projectiles = new ArrayList<>();
 
 	Room(int xRes, int yRes, JPanel panel) {
 		// Since the screen resolution is based on
