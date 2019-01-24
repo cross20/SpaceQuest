@@ -97,7 +97,7 @@ public class SpaceQuest {
 			@Override
 			public void run() {
 				p.updatePlayerLocation(controllers.getState(0), currRoom);
-				currRoom.getEnemy(0).updateEnemyLocation(currRoom, character);
+				//currRoom.getEnemy(0).updateEnemyLocation(currRoom, character);
 			}
 		};
 
