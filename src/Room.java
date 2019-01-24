@@ -94,6 +94,7 @@ public class Room {
 					Enemy e = new Enemy(3, 3, 1, l);
 					enemies.add(e);
 					e.drawEntity(l, panel, l.getLocation());
+					
 					drawFloor(row, column);
 				}
 				else if(lineData[column][row].equals("X")) {
@@ -188,6 +189,47 @@ public class Room {
 			}
 			// Check the top-left of the entity.
 			else if(topLeft.getX() > wallX && topLeft.getX() < wallW && topLeft.getY() > wallY && topLeft.getY() < wallH) {
+				return false;
+			}
+		}
+		
+		int enemyX, enemyW, enemyY, enemyH;
+		
+		for(Enemy e : enemies) {
+			enemyX = e.getRotateLabel().getLocation().x;
+			enemyY = e.getRotateLabel().getLocation().y;
+			enemyW = enemyX + e.getRotateLabel().getWidth();
+			enemyH = enemyY + e.getRotateLabel().getHeight();
+			
+			if(top.getX() > enemyX && top.getX() < enemyW && top.getY() > enemyY && top.getY() < enemyH) {
+				return false;
+			}
+			// Check the top-right of the entity.
+			else if(topRight.getX() > enemyX && topRight.getX() < enemyW && topRight.getY() > enemyY && topRight.getY() < enemyH) {
+				return false;
+			}
+			// Check the right-center of the entity.
+			else if(right.getX() > enemyX && right.getX() < enemyW && right.getY() > enemyY && right.getY() < enemyH) {
+				return false;
+			}
+			// Check the bottom-right of the entity.
+			else if(bottomRight.getX() > enemyX && bottomRight.getX() < enemyW && bottomRight.getY() > enemyY && bottomRight.getY() < enemyH) {
+				return false;
+			}
+			// Check the bottom-center of the entity.
+			else if(bottom.getX() > enemyX && bottom.getX() < enemyW && bottom.getY() > enemyY && bottom.getY() < enemyH) {
+				return false;
+			}
+			// Check the bottom-left of the entity.
+			else if(bottomLeft.getX() > enemyX && bottomLeft.getX() < enemyW && bottomLeft.getY() > enemyY && bottomLeft.getY() < enemyH) {
+				return false;
+			}
+			// Check the left-center of the entity.
+			else if(left.getX() > enemyX && left.getX() < enemyW && left.getY() > enemyY && left.getY() < enemyH) {
+				return false;
+			}
+			// Check the top-left of the entity.
+			else if(topLeft.getX() > enemyX && topLeft.getX() < enemyW && topLeft.getY() > enemyY && topLeft.getY() < enemyH) {
 				return false;
 			}
 		}

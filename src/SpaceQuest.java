@@ -96,7 +96,8 @@ public class SpaceQuest {
 		Runnable movePlayer = new Runnable() {
 			@Override
 			public void run() {
-				p.updateEntityLocation(controllers.getState(0), currRoom);
+				p.updatePlayerLocation(controllers.getState(0), currRoom);
+				currRoom.getEnemy(0).updateEnemyLocation(currRoom, character);
 			}
 		};
 
