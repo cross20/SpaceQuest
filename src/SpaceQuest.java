@@ -96,7 +96,7 @@ public class SpaceQuest {
 		Runnable movePlayer = new Runnable() {
 			@Override
 			public void run() {
-				p.updatePlayerLocation(controllers.getState(0), currRoom);
+				p.updateEntityLocation(controllers.getState(0), currRoom);
 			}
 		};
 
@@ -109,7 +109,6 @@ public class SpaceQuest {
 		};
 
 		Runnable changeRoom = new Runnable() {
-
 			@Override
 			public void run() {			
 				int centerX = character.getX() + (character.getWidth() / 2);
@@ -197,7 +196,7 @@ public class SpaceQuest {
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
 		character.setBounds(new Rectangle(256, 128, characterDimensions, characterDimensions));
-		p = new Player(character);
+		p = new Player(10, 10, 1, character);
 
 		// Add all GUI components to the JFrame
 		frame.getContentPane().add(panel);

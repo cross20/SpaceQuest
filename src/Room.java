@@ -20,6 +20,7 @@ public class Room {
 	private int xPosition, yPosition;
 	private JPanel panel;
 	private ArrayList<JLabel> walls = new ArrayList<>();
+	private ArrayList<Enemy> enemies = new ArrayList<>();
 	
 	Room(int xRes, int yRes, JPanel panel) {
 		// Since the screen resolution is based on
@@ -82,9 +83,17 @@ public class Room {
 		for(int column = 0; column < lineData.length; column++) {
 			for (int row = 0; row < lineData[0].length; row++) {
 				if(lineData[column][row].equals("*")) {
-					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
-					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
-					panel.add(floor);
+					JLabel space = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
+					space.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					panel.add(space);
+				}
+				else if(lineData[column][row].equals("E")) {
+					drawFloor(row, column);
+					RotateLabel l = new RotateLabel(new ImageIcon("/assets/textures/enemy.png"));
+					l.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+					Enemy e = new Enemy(3, 3, 1, l);
+					enemies.add(e);
+					e.drawEntity(panel, l.getLocation());
 				}
 				else if(lineData[column][row].equals("X")) {
 					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
@@ -93,9 +102,7 @@ public class Room {
 					walls.add(wall);
 				}
 				else {
-					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
-					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
-					panel.add(floor);
+					drawFloor(row, column);
 				}
 			}
 			character.setLocation(x, y);
@@ -119,7 +126,7 @@ public class Room {
 		
 		// Allow for the entity and the wall objects to overlap
 		// slightly to avoid inaccurate graphical collisions.
-		final int buffer = 7;
+		final int buffer = 6;
 		
 		// Calculate various (separate) x and y coordinates around
 		// the entity.
@@ -185,5 +192,44 @@ public class Room {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Get the size of the {@code ArrayList enemies}.
+	 * @return int
+	 */
+	public int getNumEnemies() {
+		return enemies.size();
+	}
+	
+	/**
+	 * Get the enemy at the specified index.
+	 * 
+	 * @param index
+	 * @return Enemy
+	 */
+	public Enemy getEnemy(int index) {
+		return enemies.get(index);
+	}
+	
+	/**
+	 * Get all of the enemies in the room.
+	 * 
+	 * @return ArrayList<Enemy>
+	 */
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+	
+	/**
+	 * Draw the floor texture at the specified location.
+	 * 
+	 * @param row
+	 * @param column
+	 */
+	private void drawFloor(int row, int column) {
+		JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
+		floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
+		panel.add(floor);
 	}
 }
