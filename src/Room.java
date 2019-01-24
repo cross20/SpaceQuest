@@ -77,7 +77,6 @@ public class Room {
 		// boundary/wall locations. Boundaries are represented by X's in
 		// the levels file.
 		panel.removeAll();
-		//character.setLocation(x, y);
 		panel.add(character);
 		
 		for(int column = 0; column < lineData.length; column++) {
@@ -86,25 +85,22 @@ public class Room {
 					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
 					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(floor);
-					panel.revalidate();
-					panel.repaint();
 				}
 				else if(lineData[column][row].equals("X")) {
 					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
 					wall.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(wall);
-					panel.revalidate();
-					panel.repaint();
 					walls.add(wall);
 				}
 				else {
 					JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
 					floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(floor);
-					panel.revalidate();
-					panel.repaint();
 				}
 			}
+			character.setLocation(x, y);
+			panel.revalidate();
+			panel.repaint();
 		}
 	}
 	
@@ -188,13 +184,6 @@ public class Room {
 				return false;
 			}
 		}
-		
 		return true;
 	}
-	
-	/*public int getColumn() { return currColumn; }
-	public int getRow() { return currRow; }
-	
-	public void setColumn( int column ) { currColumn = column; }
-	public void setRow( int row ) { currRow = row; }*/
 }

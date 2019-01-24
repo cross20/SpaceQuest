@@ -44,6 +44,7 @@ public class SpaceQuest {
 
 	// Character
 	private final static int characterDimensions = 50;
+	private static Player p;
 
 	/**
 	 * Launch the application.
@@ -95,60 +96,14 @@ public class SpaceQuest {
 		Runnable movePlayer = new Runnable() {
 			@Override
 			public void run() {
-				// Check to current state of the controller.
-				ControllerState currState = controllers.getState(0);
-
-				if(currState.leftStickMagnitude >= minMagnitude) {
-					System.out.println(character.getLocation());
-					
-					// Determine what direction to send the player.
-					// For reference, 0 is right, PI/2 is upward,
-					// PI is left, and -PI/2 is downward.
-					double currAngle = Math.toRadians(currState.leftStickAngle);
-
-					//if left stick magnitude is over one, change it to one to represent that player is at maximum speed
-					double lsmag = currState.leftStickMagnitude;
-					if (lsmag > 1.0)
-						lsmag = 1.0;
-
-					// The formula below determines what percentage out
-					// of 5 pixels the player should move in the X and Y
-					// directions. The result is approximated since it
-					// must be type int. Add for newX because x increases
-					// from left to right and subtract for newY because y
-					// increases from top to bottom.
-					int newX = character.getLocation().x + (int)Math.round((Math.cos(currAngle)*5*lsmag*2));
-					int newY = character.getLocation().y - (int)Math.round((Math.sin(currAngle)*5*lsmag*2));
-
-					// Check to see if the player will stay inside of the
-					// bounds of the map. If so, update their location.
-					// Otherwise, keep their location the same.
-					if(currRoom.checkRoomBounds(character, new Point(newX, newY))) {
-						// Update the JLabel which represents the character.
-						character.setLocation(newX, newY);
-					} else if (currRoom.checkRoomBounds(character, new Point(character.getLocation().x, newY))) {
-						character.setLocation(character.getLocation().x, newY);
-					} else if (currRoom.checkRoomBounds(character, new Point(newX, character.getLocation().y))) {
-						character.setLocation(newX, character.getLocation().y);
-					} else {
-						character.setLocation(character.getLocation().x, character.getLocation().y);
-					}
-				}
+				p.updatePlayerLocation(controllers.getState(0), currRoom);
 			}
 		};
 
 		Runnable rotatePlayer = new Runnable() {
-			// TODO: Fix the rotation so that it doesn't depend upon the player moving.
-
 			@Override
 			public void run() {
-				// Check to current state of the controller.
-				ControllerState currState = controllers.getState(0);
-
-				if(currState.rightStickMagnitude >= minMagnitude) {
-					character.setRotation(currState.rightStickAngle);
-					character.setLocation(character.getLocation().x, character.getLocation().y);
-				}
+				p.updatePlayerRotation(controllers.getState(0));
 				frame.repaint();
 			}
 		};
@@ -156,34 +111,32 @@ public class SpaceQuest {
 		Runnable changeRoom = new Runnable() {
 
 			@Override
-			public void run() {
+			public void run() {			
 				int centerX = character.getX() + (character.getWidth() / 2);
 				int centerY = character.getY() + (character.getHeight() / 2);
 				int currentX = character.getX();
 				int currentY = character.getY();
 
-				// only teleported to adjacent room if there is a room to enter
-				
+				// only teleport to adjacent room if there is a room to enter
 				if(centerY <= 0 && Room.currRow > 0) {	//if player exits via top of screen
 					currRoom = map[--Room.currRow][Room.currColumn];
 					currRoom.drawRoom(character,currentX, (yRes[res] - (character.getHeight()/2 + 10)) );
-					character.setLocation(currentX, (yRes[res] - (character.getHeight()/2 + 10)));
+					//character.setLocation(currentX, (yRes[res] - (character.getHeight()/2 + 10)));
 
 				} else if (centerY >= yRes[res] && Room.currRow < map.length - 1) {	//if player exits via bottom of screen
 					currRoom = map[++Room.currRow][Room.currColumn];
 					currRoom.drawRoom(character,currentX, (0 - character.getHeight()/2 + 10));
-					character.setLocation(currentX, (0 - character.getHeight()/2 + 10));
+					//character.setLocation(currentX, (0 - character.getHeight()/2 + 10));
 
 				} else if (centerX <= 0 && Room.currColumn > 0) {	//if player exits via left of screen
 					currRoom = map[Room.currRow][--Room.currColumn];
 					currRoom.drawRoom(character, (xRes[res] - (character.getWidth()/2 + 10)),currentY);
-					character.setLocation((xRes[res] - (character.getWidth()/2 + 10)),currentY);
+					//character.setLocation((xRes[res] - (character.getWidth()/2 + 10)),currentY);
 
 				} else if (centerX >= xRes[res] && Room.currColumn < map[0].length) { //if player exits via right of screen
 					currRoom = map[Room.currRow][++Room.currColumn];
 					currRoom.drawRoom(character, (0 -  character.getWidth()/2 + 10),currentY);
-					character.setLocation((0 -  character.getWidth()/2 + 10),currentY);
-					
+					//character.setLocation((0 -  character.getWidth()/2 + 10),currentY);
 				}
 			}
 		};
@@ -244,6 +197,7 @@ public class SpaceQuest {
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
 		character.setBounds(new Rectangle(256, 128, characterDimensions, characterDimensions));
+		p = new Player(character);
 
 		// Add all GUI components to the JFrame
 		frame.getContentPane().add(panel);
