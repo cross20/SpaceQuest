@@ -1,15 +1,19 @@
 import javax.swing.*;
 
-public class Projectile {
-	RotateLabel label;
-	private static ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "/assets/textures/projectile.png");
-
-	public Projectile(int x, int y,double angle) {
-		label = new RotateLabel(icon);
-		label.setLocation(x, y);
-		label.setRotation(angle);
+public class Projectile extends Entity{
+	private static ImageIcon icon = new ImageIcon(SpaceQuest.curdir + "/assets/textures/projectile.png");
+	boolean isPlayerProjectile = false;
+	
+	public Projectile(int x, int y,double angle,boolean isPlayer) {
+		entity = new RotateLabel(icon);
+		entity.setLocation(x, y);
+		entity.setRotation(angle);
+		isPlayerProjectile = isPlayer;
 	}
 	
+	public RotateLabel getLabel() { return entity; }
 	
-	
+	public void setLocation(int x, int y) {
+		entity.setLocation(x, y);
+	}
 }

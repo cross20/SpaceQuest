@@ -63,7 +63,7 @@ abstract class Entity {
 	 */
 	protected void updateEntityLocation(ControllerState currState, Room currRoom) {
 		if(currState.leftStickMagnitude >= SpaceQuest.minMagnitude) {
-			System.out.println(entity.getLocation());
+			//System.out.println(entity.getLocation());
 			
 			// Determine what direction to send the player.
 			// For reference, 0 is right, PI/2 is upward,
@@ -116,8 +116,17 @@ abstract class Entity {
 		}
 	}
 	
-	/*public void fireProjectile() {
-		Projectile p = new Projectile()
+	/*public void fireProjectile(JPanel panel) {
+		
+		Projectile p = new Projectile(entity.getX() + entity.getWidth()/2,entity.getY() + entity.getHeight()/2,entity.getRotation(),isPlayer);
+		
+		while(p.getLabel().getX() > 0 && p.getLabel().getX() < SpaceQuest.xRes[SpaceQuest.res]) {
+			panel.add(p.getLabel());
+			panel.revalidate();
+			panel.repaint();
+			p.setLocation(p.getLabel().getX() + 5, p.getLabel().getY() + 5);
+		}
+		
 	}*/
 
 	public int getCurrentHealth() {

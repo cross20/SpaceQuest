@@ -33,4 +33,5 @@ public class RotateLabel extends JLabel {
 	}
 	
 	public void setRotation( double angle ) { this.angle = angle; }
+	public double getRotation() { return angle; }
 }
