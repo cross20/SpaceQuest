@@ -77,7 +77,7 @@ public class Room {
 		// boundary/wall locations. Boundaries are represented by X's in
 		// the levels file.
 		panel.removeAll();
-		character.setLocation(128, 256);
+		character.setLocation(256, 256);
 		panel.add(character);
 		
 		for(int column = 0; column < lineData.length; column++) {
