@@ -116,6 +116,10 @@ abstract class Entity {
 		}
 	}
 	
+	/*public void fireProjectile() {
+		Projectile p = new Projectile()
+	}*/
+
 	public int getCurrentHealth() {
 		return this.currentHealth;
 	}
