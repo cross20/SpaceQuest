@@ -110,4 +110,8 @@ abstract class Entity {
 			character.setLocation(character.getLocation().x, character.getLocation().y);
 		}
 	}
+	
+	/*protected void fireProjectile() {
+		Projectile p = new Projectile()
+	}*/
 }
