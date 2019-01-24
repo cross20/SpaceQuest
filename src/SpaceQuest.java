@@ -19,9 +19,9 @@ import java.util.concurrent.*;
  */
 public class SpaceQuest {
 	// Resolution options.
-	private static int[] xRes = {1920, 1280, 1024};
-	private static int[] yRes = {1080, 720, 576};
-	private static int res = 1;
+	public static int[] xRes = {1920, 1280, 1024};
+	public static int[] yRes = {1080, 720, 576};
+	public static int res = 1;
 	private static double frameRate = 30;
 
 	// GUI elements.
@@ -31,7 +31,7 @@ public class SpaceQuest {
 	private static MainMenu mm;
 
 	// File I/O.
-	private String curdir = System.getProperty("user.dir");
+	public static String curdir = System.getProperty("user.dir");
 	private String OS = System.getProperty("os.name");
 
 	// Controller.
@@ -109,6 +109,22 @@ public class SpaceQuest {
 			}
 		};
 
+		Runnable fireProjectile = new Runnable() {
+			@Override
+			public void run() {
+				ControllerState currState = controllers.getState(0);
+				//System.out.println(currState.rightTrigger);
+				if(currState.rightTrigger > (float)minMagnitude) {
+					Projectile proj = new Projectile(p.getLabel().getX(), p.getLabel().getY(),p.getLabel().getRotation(),true);
+					proj.drawEntity(proj.getLabel(), panel, p.getLabel().getLocation());
+					System.out.println("pew");
+					try{
+						Thread.sleep(250);
+					} catch (InterruptedException ex) {;}
+				}
+			}
+		};
+		
 		Runnable changeRoom = new Runnable() {
 			@Override
 			public void run() {			
@@ -144,6 +160,7 @@ public class SpaceQuest {
 		// Schedule to check for controller updates every 10 milliseconds.
 		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, (int)(frameRate), TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(rotatePlayer, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
+		scheduledPool.scheduleWithFixedDelay(fireProjectile, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(changeRoom, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		
 		frame.repaint();
@@ -214,5 +231,6 @@ public class SpaceQuest {
 		
 		mm = new MainMenu(xRes[res], yRes[res]);
 		mm.drawMenu(panel);
+
 	}
 }
