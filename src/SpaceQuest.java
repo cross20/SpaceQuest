@@ -97,7 +97,7 @@ public class SpaceQuest {
 			@Override
 			public void run() {
 				p.updatePlayerLocation(controllers.getState(0), currRoom);
-				//currRoom.getEnemy(0).updateEnemyLocation(currRoom, character);
+				//currRoom.getEnemy(0).updateEnemyLocation(currRoom, p.getRotateLabel());
 			}
 		};
 
@@ -157,8 +157,7 @@ public class SpaceQuest {
 			}
 		};
 
-		// Schedule to check for controller updates every 10 milliseconds.
-		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, (int)(frameRate), TimeUnit.MILLISECONDS);
+		scheduledPool.scheduleWithFixedDelay(movePlayer, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(rotatePlayer, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(fireProjectile, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(changeRoom, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
@@ -213,7 +212,7 @@ public class SpaceQuest {
 
 		// Create the player
 		character = new RotateLabel(new ImageIcon(curdir + "/assets/textures/demoCharacter.png"));
-		character.setBounds(new Rectangle(256, 128, characterDimensions, characterDimensions));
+		character.setBounds(new Rectangle(xRes[res]/2, yRes[res]/2, characterDimensions, characterDimensions));
 		p = new Player(10, 10, 1, character);
 
 		// Add all GUI components to the JFrame
