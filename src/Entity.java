@@ -116,18 +116,7 @@ abstract class Entity {
 		}
 	}
 	
-	/*public void fireProjectile(JPanel panel) {
-		
-		Projectile p = new Projectile(entity.getX() + entity.getWidth()/2,entity.getY() + entity.getHeight()/2,entity.getRotation(),isPlayer);
-		
-		while(p.getLabel().getX() > 0 && p.getLabel().getX() < SpaceQuest.xRes[SpaceQuest.res]) {
-			panel.add(p.getLabel());
-			panel.revalidate();
-			panel.repaint();
-			p.setLocation(p.getLabel().getX() + 5, p.getLabel().getY() + 5);
-		}
-		
-	}*/
+	public RotateLabel getLabel() { return entity; }
 
 	public int getCurrentHealth() {
 		return this.currentHealth;

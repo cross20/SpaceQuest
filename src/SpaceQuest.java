@@ -114,8 +114,8 @@ public class SpaceQuest {
 				ControllerState currState = controllers.getState(0);
 				//System.out.println(currState.rightTrigger);
 				if(currState.rightTrigger > (float)minMagnitude) {
-					//Projectile proj = new Projectile(p.)
-					//p.fireProjectile(panel);
+					Projectile proj = new Projectile(p.getLabel().getX(), p.getLabel().getY(),p.getLabel().getRotation(),true);
+					proj.drawEntity(proj.getLabel(), panel, p.getLabel().getLocation());
 					System.out.println("pew");
 					try{
 						Thread.sleep(250);
@@ -230,7 +230,6 @@ public class SpaceQuest {
 		
 		mm = new MainMenu(xRes[res], yRes[res]);
 		mm.drawMenu(panel);
-		
-		System.out.print(System.getProperty("user.dir") + "/assets/textures/projectile.png");
+
 	}
 }
