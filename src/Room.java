@@ -72,12 +72,12 @@ public class Room {
 	/**
 	 * Generate a JLabel at each location which represents a boundary.
 	 */
-	public void drawRoom(JLabel character) {
+	public void drawRoom(JLabel character, int x, int y) {
 		// Iterate through the lineData array to find which locations are
 		// boundary/wall locations. Boundaries are represented by X's in
 		// the levels file.
 		panel.removeAll();
-		character.setLocation(128, 256);
+		character.setLocation(x, y);
 		panel.add(character);
 		
 		for(int column = 0; column < lineData.length; column++) {

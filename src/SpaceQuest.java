@@ -73,7 +73,7 @@ public class SpaceQuest {
 			window.frame.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		currRoom.drawRoom(character);
+		currRoom.drawRoom(character, xRes[res]/2, yRes[res]/2);
 
 		// movePlayer checks to see if the the leftStick is active
 		// and determines where to move the player if it is.
@@ -142,24 +142,31 @@ public class SpaceQuest {
 			public void run() {
 				int centerX = character.getX() + (character.getWidth() / 2);
 				int centerY = character.getY() + (character.getHeight() / 2);
+				int currentX = character.getX();
+				int currentY = character.getY();
 
-				//System.out.printf("room [%d] [%d]\n",Room.currColumn,Room.currRow);
+				// only teleported to adjacent room if there is a room to enter
 				
-				if(centerY <= 0 && Room.currColumn > 0) {
-					currRoom = map[--Room.currColumn][Room.currRow];
-					currRoom.drawRoom(character);
+				if(centerY <= 0 && Room.currRow > 0) {	//if player exits via top of screen
+					currRoom = map[--Room.currRow][Room.currColumn];
+					currRoom.drawRoom(character,currentX, (yRes[res] - (character.getHeight()/2 + 10)) );
+					character.setLocation(currentX, (yRes[res] - (character.getHeight()/2 + 10)));
 
-				} else if (centerY >= yRes[res] && Room.currColumn < 17) {
-					currRoom = map[++Room.currColumn][Room.currRow];
-					currRoom.drawRoom(character);
+				} else if (centerY >= yRes[res] && Room.currRow < map.length - 1) {	//if player exits via bottom of screen
+					currRoom = map[++Room.currRow][Room.currColumn];
+					currRoom.drawRoom(character,currentX, (0 - character.getHeight()/2 + 10));
+					character.setLocation(currentX, (0 - character.getHeight()/2 + 10));
 
-				} else if (centerX <= 0 && Room.currRow > 0) {
-					currRoom = map[Room.currColumn][--Room.currRow];
-					currRoom.drawRoom(character);
+				} else if (centerX <= 0 && Room.currColumn > 0) {	//if player exits via left of screen
+					currRoom = map[Room.currRow][--Room.currColumn];
+					currRoom.drawRoom(character, (xRes[res] - (character.getWidth()/2 + 10)),currentY);
+					character.setLocation((xRes[res] - (character.getWidth()/2 + 10)),currentY);
 
-				} else if (centerX >= xRes[res] && Room.currRow < 31) {
-					currRoom = map[Room.currColumn][++Room.currRow];
-					currRoom.drawRoom(character);
+				} else if (centerX >= xRes[res] && Room.currColumn < map[0].length) { //if player exits via right of screen
+					currRoom = map[Room.currRow][++Room.currColumn];
+					currRoom.drawRoom(character, (0 -  character.getWidth()/2 + 10),currentY);
+					character.setLocation((0 -  character.getWidth()/2 + 10),currentY);
+					
 				}
 			}
 		};
