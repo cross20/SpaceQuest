@@ -194,6 +194,17 @@ public class SpaceQuest {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		String currentDir = curdir;
+		SpaceQuest.curdir = "";
+		
+		if(currentDir.contains("/src")) {
+			for(int i = 0; i < currentDir.indexOf("/src"); i++) {
+				curdir+= currentDir.charAt(i);
+			}
+		} else {
+			SpaceQuest.curdir = currentDir;
+		}
+		
 		controllers = new ControllerManager();
 		controllers.initSDLGamepad();
 

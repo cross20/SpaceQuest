@@ -15,7 +15,6 @@ public class Room {
 	public static int currRow = 0;
 
 	private int roomID;
-	private String curdir = System.getProperty("user.dir");
 	private String lineData[][];
 	private int xPosition, yPosition;
 	private JPanel panel;
@@ -41,7 +40,7 @@ public class Room {
 	public void initializeRoom() {
 		String splitBy = " "; // Information is separated by spaces in the levels file.
 
-		File f = new File(curdir + "/assets/levels.INFO");
+		File f = new File(SpaceQuest.curdir + "/assets/levels.INFO");
 
 		// Read in text from the file to create the room map.
 		try(FileInputStream is = new FileInputStream(f)) {
@@ -85,12 +84,12 @@ public class Room {
 		for(int column = 0; column < lineData.length; column++) {
 			for (int row = 0; row < lineData[0].length; row++) {
 				if(lineData[column][row].equals("*")) {
-					JLabel space = new JLabel(new ImageIcon(curdir + "/assets/textures/space.png"));
+					JLabel space = new JLabel(new ImageIcon(SpaceQuest.curdir + "/assets/textures/space.png"));
 					space.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(space);
 				}
 				else if(lineData[column][row].equals("E")) {
-					RotateLabel l = new RotateLabel(new ImageIcon(curdir + "/assets/textures/enemy.png"));
+					RotateLabel l = new RotateLabel(new ImageIcon(SpaceQuest.curdir + "/assets/textures/enemy.png"));
 					l.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					Enemy e = new Enemy(3, 3, 1, l);
 					enemies.add(e);
@@ -99,7 +98,7 @@ public class Room {
 					drawFloor(row, column);
 				}
 				else if(lineData[column][row].equals("X")) {
-					JLabel wall = new JLabel(new ImageIcon(curdir + "/assets/textures/wall.png"));
+					JLabel wall = new JLabel(new ImageIcon(SpaceQuest.curdir + "/assets/textures/wall.png"));
 					wall.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 					panel.add(wall);
 					walls.add(wall);
@@ -290,7 +289,7 @@ public class Room {
 	 * @param column
 	 */
 	private void drawFloor(int row, int column) {
-		JLabel floor = new JLabel(new ImageIcon(curdir + "/assets/textures/floor.png"));
+		JLabel floor = new JLabel(new ImageIcon(SpaceQuest.curdir + "/assets/textures/floor.png"));
 		floor.setBounds(xPosition*row, yPosition*column, xPosition, yPosition);
 		panel.add(floor);
 	}

@@ -38,7 +38,6 @@ public class MainMenu {
 	 * @param panel
 	 */
 	public void drawMenu(JPanel panel) {
-		String curdir = System.getProperty("user.dir");
 		Random rnd = new Random();
 		int r = rnd.nextInt(20);
 		
@@ -49,9 +48,9 @@ public class MainMenu {
 		// easter egg. Occasionally, the game will flip the logo
 		// vertically (about 1 in every 20 times the game runs).
 		if(r == 1)
-			title = new JLabel(new ImageIcon(curdir + "/assets/textures/SpaceQuestFlip.png"));
+			title = new JLabel(new ImageIcon(SpaceQuest.curdir + "/assets/textures/SpaceQuestFlip.png"));
 		else
-			title = new JLabel(new ImageIcon(curdir + "/assets/textures/SpaceQuest.png"));
+			title = new JLabel(new ImageIcon(SpaceQuest.curdir + "/assets/textures/SpaceQuest.png"));
 		
 		title.setBounds(xCenter - 96, yCenter - 130, 192, 108);
 		panel.removeAll();

@@ -1,0 +1,10 @@
+List of concepts used in the project from the class
+
+1) Primitives and references.
+2) Object state, behavior, identity, and flow control.
+3) Inheritance and polymorphism.
+4) Exception handling.
+5) GUI development.
+6) Swing/AWT.
+7) File I/O.
+8) Multithreading.
