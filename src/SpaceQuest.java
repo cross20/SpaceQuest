@@ -109,7 +109,7 @@ public class SpaceQuest {
 			}
 		};
 
-		Runnable fireProjectile = new Runnable() {
+		Runnable fireProjectile = new Runnable() {	//INCOMPLETE
 			@Override
 			public void run() {
 				ControllerState currState = controllers.getState(0);
@@ -220,6 +220,7 @@ public class SpaceQuest {
 		frmSpacequest.getContentPane().add(panel);
 		frmSpacequest.setVisible(true);
 
+		//fill map
 		map = new Room[4][5];
 		for( int row = 0; row < map.length; row++) {
 			for (int col = 0; col < map[row].length; col++) {

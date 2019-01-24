@@ -17,9 +17,9 @@ public class Projectile extends Entity{
 		int newX = entity.getLocation().x + (int)Math.round((Math.cos(currAngle)*20));
 		int newY = entity.getLocation().y - (int)Math.round((Math.sin(currAngle)*20));
 		
-		// Check to see if the player will stay inside of the
-		// bounds of the map. If so, update their location.
-		// Otherwise, keep their location the same.
+		// Check to see if the projectile will stay inside of the
+		// bounds of the map. If so, update its location.
+		// Otherwise, keep its location the same.
 		if(currRoom.checkRoomBounds(entity, new Point(newX, newY))) {
 			// Update the JLabel which represents the character.
 			entity.setLocation(newX, newY);
