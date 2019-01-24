@@ -25,7 +25,7 @@ public class SpaceQuest {
 	private static double frameRate = 30;
 
 	// GUI elements.
-	private static JFrame frame;
+	private static JFrame frmSpacequest;
 	private static JPanel panel;
 	private static RotateLabel character;
 	private static MainMenu mm;
@@ -70,8 +70,8 @@ public class SpaceQuest {
 
 		try {
 			SpaceQuest window = new SpaceQuest();
-			window.frame.setBackground(Color.black);
-			window.frame.setVisible(true);
+			window.frmSpacequest.setBackground(Color.black);
+			window.frmSpacequest.setVisible(true);
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		// Loop until a menu selection has been made on the main menu.
@@ -105,7 +105,7 @@ public class SpaceQuest {
 			@Override
 			public void run() {
 				p.updatePlayerRotation(controllers.getState(0));
-				frame.repaint();
+				frmSpacequest.repaint();
 			}
 		};
 
@@ -162,7 +162,7 @@ public class SpaceQuest {
 		scheduledPool.scheduleWithFixedDelay(fireProjectile, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		scheduledPool.scheduleWithFixedDelay(changeRoom, 0, (int)(1000.0/frameRate), TimeUnit.MILLISECONDS);
 		
-		frame.repaint();
+		frmSpacequest.repaint();
 		
 		// This loop will check to see if the game exit conditions are satisfied.
 		// If they are, then stop all threads and execute the game exit process.
@@ -185,8 +185,8 @@ public class SpaceQuest {
 	}
 	
 	private static void quitGame() {
-		frame.setVisible(false);
-		frame.dispose();
+		frmSpacequest.setVisible(false);
+		frmSpacequest.dispose();
 		System.exit(0);
 	}
 
@@ -198,11 +198,12 @@ public class SpaceQuest {
 		controllers.initSDLGamepad();
 
 		// Create the JFrame
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmSpacequest = new JFrame();
+		frmSpacequest.setTitle("SpaceQuest");
+		frmSpacequest.setResizable(false);
+		frmSpacequest.setBounds(100, 100, xRes[res] + 6, yRes[res] + 29);
+		frmSpacequest.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSpacequest.getContentPane().setLayout(null);
 
 		// Create the JPanel
 		panel = new JPanel();
@@ -216,8 +217,8 @@ public class SpaceQuest {
 		p = new Player(10, 10, 1, character);
 
 		// Add all GUI components to the JFrame
-		frame.getContentPane().add(panel);
-		frame.setVisible(true);
+		frmSpacequest.getContentPane().add(panel);
+		frmSpacequest.setVisible(true);
 
 		map = new Room[4][5];
 		for( int row = 0; row < map.length; row++) {
